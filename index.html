@@ -1,0 +1,2195 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PranikaTools — Simple Tools for Real Work</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Hind:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --orange: #ff6b1a;
+        --orange-lt: #fff0e6;
+        --blue: #1a6aff;
+        --blue-lt: #e8f0ff;
+        --green: #138808;
+        --green-lt: #eaf6e9;
+        --purple: #6c3de8;
+        --purple-lt: #ede9ff;
+        --teal: #007b82;
+        --teal-lt: #e3f5f6;
+        --navy: #1a2240;
+        --bg: #f7f8fa;
+        --white: #ffffff;
+        --border: #e4e7ee;
+        --text: #1e2330;
+        --muted: #6b7280;
+        --radius: 14px;
+        --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.06);
+        --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.12);
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: "Hind", sans-serif;
+        font-size: 16px;
+        line-height: 1.65;
+        overflow-x: hidden;
+      }
+
+      /* ── TOP ACCENT BAR ── */
+      .top-bar {
+        height: 3px;
+        background: linear-gradient(90deg, var(--orange), #ffaa5a, var(--blue));
+      }
+
+      /* ── NAV ── */
+      nav {
+        background: var(--white);
+        border-bottom: 1px solid var(--border);
+        padding: 0 6%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 62px;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: var(--shadow-sm);
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+      }
+      .logo-mark {
+        width: 34px;
+        height: 34px;
+        background: var(--orange);
+        border-radius: 9px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Baloo 2", cursive;
+        font-weight: 800;
+        font-size: 1.05rem;
+        color: #fff;
+      }
+      .logo-text {
+        font-family: "Baloo 2", cursive;
+        font-weight: 700;
+        font-size: 1.25rem;
+        color: var(--navy);
+        letter-spacing: -0.02em;
+      }
+      .logo-text span {
+        color: var(--orange);
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 26px;
+        list-style: none;
+        align-items: center;
+      }
+      .nav-links a {
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: color 0.2s;
+      }
+      .nav-links a:hover {
+        color: var(--navy);
+      }
+      .nav-btn {
+        background: var(--orange) !important;
+        color: #fff !important;
+        padding: 8px 20px;
+        border-radius: 8px;
+        font-weight: 600 !important;
+        transition:
+          opacity 0.2s,
+          transform 0.15s;
+      }
+      .nav-btn:hover {
+        opacity: 0.9 !important;
+        transform: translateY(-1px);
+      }
+
+      /* ── HERO ── */
+      .hero {
+        background: var(--white);
+        padding: 72px 6% 76px;
+        text-align: center;
+        border-bottom: 1px solid var(--border);
+        position: relative;
+        overflow: hidden;
+      }
+      .hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(
+            ellipse at 10% 60%,
+            rgba(255, 107, 26, 0.06) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            ellipse at 90% 60%,
+            rgba(26, 106, 255, 0.05) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            ellipse at 50% -10%,
+            rgba(108, 61, 232, 0.04) 0%,
+            transparent 45%
+          );
+        pointer-events: none;
+      }
+
+      .hero-badge {
+        display: inline-block;
+        background: var(--orange-lt);
+        color: var(--orange);
+        font-weight: 600;
+        font-size: 0.8rem;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        padding: 5px 16px;
+        border-radius: 50px;
+        margin-bottom: 22px;
+        animation: fadeUp 0.5s ease both;
+      }
+
+      .hero h1 {
+        font-family: "Baloo 2", cursive;
+        font-size: clamp(2.2rem, 5vw, 3.8rem);
+        font-weight: 800;
+        line-height: 1.12;
+        color: var(--navy);
+        letter-spacing: -0.025em;
+        max-width: 680px;
+        margin: 0 auto;
+        animation: fadeUp 0.5s 0.07s ease both;
+      }
+      .hero h1 em {
+        font-style: normal;
+        color: var(--orange);
+      }
+
+      .hero-sub {
+        font-size: 1.05rem;
+        color: var(--muted);
+        max-width: 500px;
+        margin: 16px auto 0;
+        font-weight: 400;
+        line-height: 1.72;
+        animation: fadeUp 0.5s 0.13s ease both;
+      }
+
+      .hero-actions {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        margin-top: 32px;
+        flex-wrap: wrap;
+        animation: fadeUp 0.5s 0.18s ease both;
+      }
+
+      .btn-orange {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: var(--orange);
+        color: #fff;
+        font-weight: 600;
+        font-size: 0.95rem;
+        padding: 12px 28px;
+        border-radius: 9px;
+        text-decoration: none;
+        box-shadow: 0 4px 14px rgba(255, 107, 26, 0.28);
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+      }
+      .btn-orange:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 22px rgba(255, 107, 26, 0.35);
+      }
+
+      .btn-outline {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: transparent;
+        color: var(--navy);
+        font-weight: 500;
+        font-size: 0.95rem;
+        padding: 11px 24px;
+        border-radius: 9px;
+        text-decoration: none;
+        border: 1.5px solid var(--border);
+        transition:
+          border-color 0.2s,
+          background 0.2s;
+      }
+      .btn-outline:hover {
+        border-color: #bbb;
+        background: var(--bg);
+      }
+
+      /* Stats */
+      .hero-stats {
+        display: flex;
+        justify-content: center;
+        gap: 0;
+        margin-top: 52px;
+        flex-wrap: wrap;
+        animation: fadeUp 0.5s 0.25s ease both;
+        border: 1.5px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+        max-width: 640px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .stat {
+        flex: 1;
+        text-align: center;
+        padding: 18px 20px;
+        border-right: 1.5px solid var(--border);
+        background: var(--white);
+        min-width: 120px;
+      }
+      .stat:last-child {
+        border-right: none;
+      }
+      .stat-n {
+        font-family: "Baloo 2", cursive;
+        font-size: 1.7rem;
+        font-weight: 800;
+        color: var(--navy);
+        line-height: 1;
+      }
+      .stat-l {
+        font-size: 0.78rem;
+        color: var(--muted);
+        margin-top: 3px;
+      }
+
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* ── SHARED SECTION WRAPPER ── */
+      .section {
+        padding: 72px 6%;
+        max-width: 1120px;
+        margin: 0 auto;
+      }
+
+      .sec-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.76rem;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--orange);
+        margin-bottom: 10px;
+      }
+      .sec-label::before {
+        content: "";
+        width: 16px;
+        height: 2px;
+        background: var(--orange);
+        border-radius: 2px;
+      }
+      .sec-title {
+        font-family: "Baloo 2", cursive;
+        font-size: clamp(1.6rem, 2.8vw, 2.3rem);
+        font-weight: 800;
+        color: var(--navy);
+        letter-spacing: -0.02em;
+        line-height: 1.2;
+      }
+      .sec-desc {
+        color: var(--muted);
+        font-size: 0.97rem;
+        max-width: 500px;
+        margin-top: 8px;
+        line-height: 1.72;
+      }
+
+      /* ── CATEGORY HEADER ── */
+      .cat-header {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 20px;
+        margin-top: 48px;
+      }
+      .cat-header:first-of-type {
+        margin-top: 0;
+      }
+
+      .cat-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        font-family: "Baloo 2", cursive;
+        font-weight: 700;
+        font-size: 0.85rem;
+        padding: 6px 16px;
+        border-radius: 50px;
+        letter-spacing: 0.01em;
+      }
+      .cat-free {
+        background: var(--green-lt);
+        color: var(--green);
+        border: 1.5px solid #b2ddb0;
+      }
+      .cat-paid {
+        background: var(--purple-lt);
+        color: var(--purple);
+        border: 1.5px solid #c8b8f8;
+      }
+
+      .cat-line {
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+      }
+      .cat-desc {
+        font-size: 0.88rem;
+        color: var(--muted);
+      }
+
+      /* ── TOOL CARDS ── */
+      .tools-list {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      .tool-row {
+        background: var(--white);
+        border: 1.5px solid var(--border);
+        border-radius: var(--radius);
+        padding: 28px 32px;
+        display: flex;
+        align-items: center;
+        gap: 28px;
+        text-decoration: none;
+        color: inherit;
+        transition:
+          box-shadow 0.22s,
+          border-color 0.22s,
+          transform 0.18s;
+        position: relative;
+        overflow: hidden;
+      }
+      .tool-row:hover {
+        box-shadow: var(--shadow-lg);
+        border-color: var(--tool-accent);
+        transform: translateY(-2px);
+      }
+      .tool-row::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        background: var(--tool-accent);
+        border-radius: 4px 0 0 4px;
+      }
+
+      .tool-icon-box {
+        width: 56px;
+        height: 56px;
+        border-radius: 13px;
+        background: var(--tool-bg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.55rem;
+        flex-shrink: 0;
+      }
+
+      .tool-body {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .tool-category {
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--tool-accent);
+        margin-bottom: 3px;
+      }
+      .tool-name {
+        font-family: "Baloo 2", cursive;
+        font-size: 1.18rem;
+        font-weight: 700;
+        color: var(--navy);
+        margin-bottom: 5px;
+        letter-spacing: -0.01em;
+      }
+      .tool-desc {
+        color: var(--muted);
+        font-size: 0.9rem;
+        line-height: 1.65;
+      }
+      .tool-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 12px;
+      }
+      .tag {
+        background: var(--tool-bg);
+        color: var(--tool-accent);
+        font-size: 0.73rem;
+        font-weight: 500;
+        padding: 3px 11px;
+        border-radius: 50px;
+      }
+
+      .tool-arrow {
+        width: 38px;
+        height: 38px;
+        border-radius: 9px;
+        background: var(--tool-bg);
+        color: var(--tool-accent);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        flex-shrink: 0;
+        transition:
+          background 0.2s,
+          color 0.2s;
+      }
+      .tool-row:hover .tool-arrow {
+        background: var(--tool-accent);
+        color: #fff;
+      }
+
+      .paid-chip {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        background: var(--purple-lt);
+        color: var(--purple);
+        font-size: 0.67rem;
+        font-weight: 700;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        padding: 3px 10px;
+        border-radius: 50px;
+        border: 1px solid #c8b8f8;
+      }
+
+      /* Accent per tool */
+      .t-orange {
+        --tool-accent: #ff6b1a;
+        --tool-bg: #fff0e6;
+      }
+      .t-blue {
+        --tool-accent: #1a6aff;
+        --tool-bg: #e8f0ff;
+      }
+      .t-green {
+        --tool-accent: #138808;
+        --tool-bg: #eaf6e9;
+      }
+      .t-purple {
+        --tool-accent: #6c3de8;
+        --tool-bg: #ede9ff;
+      }
+      .t-teal {
+        --tool-accent: #007b82;
+        --tool-bg: #e3f5f6;
+      }
+
+      /* ── HOW IT WORKS — DOCUMENT ── */
+      #how-doc {
+        background: var(--white);
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+      }
+
+      .how-tabs {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 36px;
+        flex-wrap: wrap;
+      }
+      .how-tab {
+        padding: 8px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.88rem;
+        cursor: pointer;
+        border: 1.5px solid var(--border);
+        background: var(--bg);
+        color: var(--muted);
+        transition: all 0.2s;
+      }
+      .how-tab.active {
+        background: var(--navy);
+        color: #fff;
+        border-color: var(--navy);
+      }
+
+      /* Step flow - horizontal with connector */
+      .step-flow {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0;
+        position: relative;
+      }
+
+      .step-flow::before {
+        content: "";
+        position: absolute;
+        top: 28px;
+        left: calc(12.5% + 20px);
+        right: calc(12.5% + 20px);
+        height: 2px;
+        background: repeating-linear-gradient(
+          90deg,
+          var(--border) 0,
+          var(--border) 8px,
+          transparent 8px,
+          transparent 16px
+        );
+      }
+
+      .step-card {
+        padding: 0 16px;
+        text-align: center;
+        position: relative;
+      }
+
+      .step-num-wrap {
+        position: relative;
+        z-index: 2;
+        width: 56px;
+        height: 56px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 16px;
+        font-size: 1.5rem;
+        background: var(--white);
+        border: 1.5px solid var(--border);
+      }
+      .step-num-wrap.active-step {
+        background: var(--orange-lt);
+        border-color: var(--orange);
+      }
+
+      .step-title {
+        font-family: "Baloo 2", cursive;
+        font-weight: 700;
+        font-size: 0.97rem;
+        color: var(--navy);
+        margin-bottom: 6px;
+      }
+      .step-desc {
+        color: var(--muted);
+        font-size: 0.84rem;
+        line-height: 1.6;
+      }
+
+      /* Panel content below steps */
+      .how-panel {
+        display: none;
+        margin-top: 40px;
+        background: var(--bg);
+        border: 1.5px solid var(--border);
+        border-radius: 14px;
+        overflow: hidden;
+      }
+      .how-panel.active {
+        display: block;
+      }
+
+      .panel-inner {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0;
+      }
+
+      .panel-left {
+        padding: 36px 36px;
+        border-right: 1.5px solid var(--border);
+      }
+      .panel-left h4 {
+        font-family: "Baloo 2", cursive;
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: var(--navy);
+        margin-bottom: 6px;
+      }
+      .panel-left p {
+        color: var(--muted);
+        font-size: 0.9rem;
+        line-height: 1.7;
+        margin-bottom: 20px;
+      }
+      .panel-steps {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .ps-item {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+      }
+      .ps-dot {
+        width: 24px;
+        height: 24px;
+        border-radius: 7px;
+        background: var(--orange-lt);
+        color: var(--orange);
+        font-family: "Baloo 2", cursive;
+        font-weight: 700;
+        font-size: 0.78rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        margin-top: 1px;
+      }
+      .ps-text {
+        font-size: 0.88rem;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+      .ps-text strong {
+        color: var(--navy);
+      }
+
+      .panel-right {
+        padding: 36px 36px;
+      }
+      .panel-right h4 {
+        font-family: "Baloo 2", cursive;
+        font-weight: 700;
+        font-size: 1rem;
+        color: var(--navy);
+        margin-bottom: 16px;
+      }
+
+      .mock-file {
+        background: var(--white);
+        border: 1.5px solid var(--border);
+        border-radius: 10px;
+        padding: 14px 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 10px;
+      }
+      .mock-icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        flex-shrink: 0;
+      }
+      .mock-name {
+        font-size: 0.88rem;
+        font-weight: 600;
+        color: var(--navy);
+      }
+      .mock-size {
+        font-size: 0.76rem;
+        color: var(--muted);
+      }
+      .mock-check {
+        margin-left: auto;
+        font-size: 0.9rem;
+        color: var(--green);
+      }
+
+      .mock-output {
+        background: var(--green-lt);
+        border: 1.5px solid #b2ddb0;
+        border-radius: 10px;
+        padding: 14px 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-top: 14px;
+      }
+      .mock-output .mock-name {
+        color: var(--green);
+      }
+
+      .progress-bar {
+        background: var(--border);
+        border-radius: 50px;
+        height: 6px;
+        margin-top: 14px;
+        overflow: hidden;
+      }
+      .progress-fill {
+        height: 100%;
+        border-radius: 50px;
+        background: linear-gradient(90deg, var(--orange), #ff9a5e);
+        width: 100%;
+      }
+
+      /* ── WHY US ── */
+      #why {
+        background: var(--bg);
+      }
+
+      .why-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+        margin-top: 40px;
+      }
+      .why-card {
+        background: var(--white);
+        border: 1.5px solid var(--border);
+        border-radius: var(--radius);
+        padding: 28px 24px;
+        transition:
+          box-shadow 0.2s,
+          border-color 0.2s;
+      }
+      .why-card:hover {
+        box-shadow: var(--shadow);
+        border-color: #ccc;
+      }
+      .why-icon {
+        font-size: 1.7rem;
+        margin-bottom: 12px;
+      }
+      .why-title {
+        font-family: "Baloo 2", cursive;
+        font-weight: 700;
+        font-size: 1rem;
+        color: var(--navy);
+        margin-bottom: 6px;
+      }
+      .why-desc {
+        color: var(--muted);
+        font-size: 0.87rem;
+        line-height: 1.68;
+      }
+
+      /* ── ABOUT ── */
+      #about {
+        background: var(--white);
+        border-top: 1px solid var(--border);
+      }
+
+      .about-layout {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 64px;
+        align-items: start;
+      }
+
+      .about-body p {
+        color: var(--muted);
+        font-size: 0.96rem;
+        line-height: 1.8;
+        margin-bottom: 16px;
+      }
+      .about-values {
+        margin-top: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .av-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+      }
+      .av-dot {
+        width: 22px;
+        height: 22px;
+        background: var(--orange-lt);
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.72rem;
+        flex-shrink: 0;
+        margin-top: 1px;
+      }
+      .av-text {
+        color: var(--muted);
+        font-size: 0.9rem;
+        line-height: 1.6;
+      }
+      .av-text strong {
+        color: var(--navy);
+      }
+
+      .about-cards {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .acard {
+        background: var(--bg);
+        border: 1.5px solid var(--border);
+        border-radius: 12px;
+        padding: 20px 22px;
+        display: flex;
+        gap: 16px;
+        align-items: center;
+        transition: border-color 0.2s;
+      }
+      .acard:hover {
+        border-color: #bbb;
+      }
+      .acard-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        flex-shrink: 0;
+      }
+      .acard-num {
+        font-family: "Baloo 2", cursive;
+        font-size: 1.4rem;
+        font-weight: 800;
+        color: var(--navy);
+        line-height: 1;
+      }
+      .acard-label {
+        color: var(--muted);
+        font-size: 0.82rem;
+        margin-top: 2px;
+      }
+
+      /* ── CTA ── */
+      .cta-section {
+        padding: 0 6% 80px;
+        max-width: 1120px;
+        margin: 0 auto;
+      }
+      .cta-box {
+        background: var(--navy);
+        border-radius: 18px;
+        padding: 60px 52px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+      .cta-box::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(
+            ellipse at 20% 50%,
+            rgba(255, 107, 26, 0.14) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            ellipse at 80% 50%,
+            rgba(26, 106, 255, 0.1) 0%,
+            transparent 50%
+          );
+        pointer-events: none;
+      }
+      .cta-box h2 {
+        font-family: "Baloo 2", cursive;
+        font-size: clamp(1.6rem, 3vw, 2.3rem);
+        font-weight: 800;
+        color: #fff;
+        margin-bottom: 10px;
+        position: relative;
+        letter-spacing: -0.02em;
+      }
+      .cta-box p {
+        color: rgba(255, 255, 255, 0.58);
+        font-size: 0.97rem;
+        max-width: 440px;
+        margin: 0 auto 28px;
+        position: relative;
+      }
+      .cta-btns {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        flex-wrap: wrap;
+        position: relative;
+      }
+      .btn-white {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: #fff;
+        color: var(--navy);
+        font-weight: 700;
+        font-size: 0.92rem;
+        padding: 11px 26px;
+        border-radius: 8px;
+        text-decoration: none;
+        transition: opacity 0.2s;
+      }
+      .btn-white:hover {
+        opacity: 0.9;
+      }
+      .btn-ghost-white {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: transparent;
+        color: rgba(255, 255, 255, 0.75);
+        font-weight: 500;
+        font-size: 0.92rem;
+        padding: 10px 22px;
+        border-radius: 8px;
+        text-decoration: none;
+        border: 1.5px solid rgba(255, 255, 255, 0.22);
+        transition: border-color 0.2s;
+      }
+      .btn-ghost-white:hover {
+        border-color: rgba(255, 255, 255, 0.45);
+      }
+
+      /* ── FOOTER ── */
+      footer {
+        background: var(--white);
+        border-top: 1px solid var(--border);
+      }
+      .footer-inner {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 52px 6% 32px;
+      }
+      .footer-top {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr 1fr;
+        gap: 40px;
+        padding-bottom: 36px;
+        border-bottom: 1px solid var(--border);
+      }
+      .footer-brand p {
+        color: var(--muted);
+        font-size: 0.87rem;
+        line-height: 1.7;
+        margin-top: 12px;
+        max-width: 240px;
+      }
+      .footer-col h5 {
+        font-family: "Baloo 2", cursive;
+        font-weight: 700;
+        font-size: 0.88rem;
+        color: var(--navy);
+        margin-bottom: 14px;
+      }
+      .footer-col ul {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 9px;
+      }
+      .footer-col ul a {
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 0.87rem;
+        transition: color 0.2s;
+      }
+      .footer-col ul a:hover {
+        color: var(--navy);
+      }
+      .footer-bottom {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 22px;
+        font-size: 0.82rem;
+        color: var(--muted);
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .bottom-bar {
+        height: 3px;
+        background: linear-gradient(90deg, var(--orange), #ffaa5a, var(--blue));
+      }
+
+      /* ── REVEAL ── */
+      .reveal {
+        opacity: 0;
+        transform: translateY(20px);
+        transition:
+          opacity 0.6s ease,
+          transform 0.6s ease;
+      }
+      .reveal.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* ── HAMBURGER ── */
+      .hamburger {
+        display: none;
+        flex-direction: column;
+        gap: 5px;
+        cursor: pointer;
+        padding: 6px;
+        border: none;
+        background: transparent;
+        border-radius: 8px;
+      }
+      .hamburger span {
+        display: block;
+        width: 22px;
+        height: 2px;
+        background: var(--navy);
+        border-radius: 2px;
+        transition:
+          transform 0.25s,
+          opacity 0.25s;
+      }
+      .hamburger.open span:nth-child(1) {
+        transform: translateY(7px) rotate(45deg);
+      }
+      .hamburger.open span:nth-child(2) {
+        opacity: 0;
+      }
+      .hamburger.open span:nth-child(3) {
+        transform: translateY(-7px) rotate(-45deg);
+      }
+
+      .mobile-menu {
+        display: none;
+        position: fixed;
+        top: 62px;
+        left: 0;
+        right: 0;
+        background: var(--white);
+        border-bottom: 1px solid var(--border);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        z-index: 99;
+        padding: 12px 6% 20px;
+        flex-direction: column;
+        gap: 0;
+      }
+      .mobile-menu.open {
+        display: flex;
+      }
+      .mobile-menu a {
+        display: block;
+        color: var(--text);
+        text-decoration: none;
+        font-size: 1rem;
+        font-weight: 500;
+        padding: 13px 0;
+        border-bottom: 1px solid var(--border);
+        transition: color 0.2s;
+      }
+      .mobile-menu a:last-child {
+        border-bottom: none;
+      }
+      .mobile-menu a:hover {
+        color: var(--orange);
+      }
+      .mobile-menu .mob-btn {
+        display: block;
+        background: var(--orange);
+        color: #fff !important;
+        text-align: center;
+        padding: 13px;
+        border-radius: 9px;
+        font-weight: 600;
+        margin-top: 10px;
+        border-bottom: none !important;
+      }
+
+      /* ── TABLET ── */
+      @media (max-width: 860px) {
+        .nav-links {
+          display: none;
+        }
+        .hamburger {
+          display: flex;
+        }
+        .hero {
+          padding: 56px 5% 60px;
+        }
+        .hero-sub {
+          font-size: 0.97rem;
+        }
+        .hero-stats {
+          max-width: 100%;
+        }
+        .section {
+          padding: 56px 5%;
+        }
+        .tool-row {
+          padding: 22px 20px;
+          gap: 16px;
+        }
+        .cat-desc {
+          display: none;
+        }
+        .step-flow {
+          grid-template-columns: 1fr 1fr;
+          gap: 16px;
+        }
+        .step-flow::before {
+          display: none;
+        }
+        .panel-inner {
+          grid-template-columns: 1fr;
+        }
+        .panel-left {
+          border-right: none;
+          border-bottom: 1.5px solid var(--border);
+          padding: 28px 24px;
+        }
+        .panel-right {
+          padding: 28px 24px;
+        }
+        .why-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+        .about-layout {
+          grid-template-columns: 1fr;
+          gap: 36px;
+        }
+        .footer-top {
+          grid-template-columns: 1fr 1fr;
+        }
+        .footer-inner {
+          padding: 40px 5% 28px;
+        }
+        .cta-box {
+          padding: 44px 28px;
+        }
+        .cta-section {
+          padding: 0 5% 60px;
+        }
+      }
+
+      /* ── MOBILE ── */
+      @media (max-width: 540px) {
+        nav {
+          padding: 0 5%;
+        }
+        .hero {
+          padding: 44px 5% 48px;
+        }
+        .hero-badge {
+          font-size: 0.72rem;
+        }
+        .hero h1 {
+          font-size: 2rem;
+        }
+        .hero-sub {
+          font-size: 0.93rem;
+          max-width: 100%;
+        }
+        .hero-actions {
+          flex-direction: column;
+          align-items: stretch;
+        }
+        .btn-orange,
+        .btn-outline {
+          justify-content: center;
+          padding: 14px 20px;
+          font-size: 1rem;
+        }
+        .hero-stats {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          max-width: 100%;
+          margin-top: 32px;
+        }
+        .stat {
+          border-right: 1.5px solid var(--border);
+          border-bottom: 1.5px solid var(--border);
+          padding: 14px 10px;
+        }
+        .stat:nth-child(2) {
+          border-right: none;
+        }
+        .stat:nth-child(3) {
+          border-bottom: none;
+        }
+        .stat:nth-child(4) {
+          border-right: none;
+          border-bottom: none;
+        }
+        .stat-n {
+          font-size: 1.4rem;
+        }
+        .tool-row {
+          padding: 18px 16px;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 14px;
+        }
+        .tool-arrow {
+          align-self: flex-end;
+        }
+        .paid-chip {
+          top: 12px;
+          right: 12px;
+          font-size: 0.62rem;
+        }
+        .tag {
+          font-size: 0.7rem;
+          padding: 3px 9px;
+        }
+        .cat-header {
+          flex-wrap: wrap;
+          gap: 8px;
+        }
+        .cat-line {
+          display: none;
+        }
+        .how-tab {
+          padding: 8px 12px;
+          font-size: 0.82rem;
+        }
+        .step-flow {
+          grid-template-columns: 1fr;
+          gap: 14px;
+        }
+        .step-card {
+          display: flex;
+          gap: 14px;
+          text-align: left;
+          padding: 0;
+          align-items: flex-start;
+        }
+        .step-num-wrap {
+          margin: 0;
+          flex-shrink: 0;
+          width: 44px;
+          height: 44px;
+          font-size: 1.2rem;
+          border-radius: 12px;
+        }
+        .step-title {
+          margin-bottom: 3px;
+        }
+        .why-grid {
+          grid-template-columns: 1fr;
+          gap: 10px;
+        }
+        .why-card {
+          padding: 20px 16px;
+        }
+        .cta-box {
+          padding: 36px 20px;
+          border-radius: 14px;
+        }
+        .cta-btns {
+          flex-direction: column;
+          align-items: stretch;
+        }
+        .btn-white,
+        .btn-ghost-white {
+          justify-content: center;
+          padding: 13px 20px;
+        }
+        .footer-top {
+          grid-template-columns: 1fr;
+          gap: 28px;
+        }
+        .footer-bottom {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 4px;
+        }
+        .acard {
+          padding: 16px;
+        }
+        .sec-title {
+          font-size: 1.6rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="top-bar"></div>
+
+    <!-- NAV -->
+    <nav>
+      <a href="#" class="logo">
+        <span class="logo-mark">Pa</span>
+        <span class="logo-text">Pranika<span>Tools</span></span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#tools">Tools</a></li>
+        <li><a href="#how-doc">How It Works</a></li>
+        <li><a href="#why">Why Us</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#tools" class="nav-btn">Try Free</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+
+    <!-- MOBILE MENU -->
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="#tools" onclick="closeMob()">Tools</a>
+      <a href="#how-doc" onclick="closeMob()">How It Works</a>
+      <a href="#why" onclick="closeMob()">Why Us</a>
+      <a href="#about" onclick="closeMob()">About</a>
+      <a href="#tools" class="mob-btn" onclick="closeMob()">Try Free →</a>
+    </div>
+
+    <!-- HERO -->
+    <div class="hero">
+      <div class="hero-badge">5 Tools · Free &amp; Paid Plans</div>
+      <h1>Simple Tools for<br /><em>Real Work</em></h1>
+      <p class="hero-sub">
+        No bloated software. No unnecessary complexity. Just clean, fast tools
+        that get your everyday tasks done — right from your browser.
+      </p>
+      <div class="hero-actions">
+        <a href="#tools" class="btn-orange">See All Tools →</a>
+        <a href="#about" class="btn-outline">About Us</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat">
+          <div class="stat-n">3</div>
+          <div class="stat-l">Free Tools</div>
+        </div>
+        <div class="stat">
+          <div class="stat-n">2</div>
+          <div class="stat-l">AI-Powered</div>
+        </div>
+        <div class="stat">
+          <div class="stat-n">0</div>
+          <div class="stat-l">Installs Needed</div>
+        </div>
+        <div class="stat">
+          <div class="stat-n">100%</div>
+          <div class="stat-l">Browser-Based</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOOLS -->
+    <div id="tools">
+      <div class="section">
+        <div class="reveal">
+          <div class="sec-label">Our Tools</div>
+          <h2 class="sec-title">Everything you need, nothing you don't</h2>
+          <p class="sec-desc">
+            Two categories — document tools that are free to use, and AI-powered
+            tools for advanced automation.
+          </p>
+        </div>
+
+        <!-- FREE TOOLS -->
+        <div class="cat-header reveal">
+          <span class="cat-badge cat-free">✓ Free Tools — Document Editor</span>
+          <div class="cat-line"></div>
+          <span class="cat-desc">No account needed</span>
+        </div>
+
+        <div class="tools-list reveal">
+          <a href="./pdf-merger.html" class="tool-row t-orange">
+            <div class="tool-icon-box">📄</div>
+            <div class="tool-body">
+              <div class="tool-category">PDF Tool</div>
+              <div class="tool-name">PDF Merger</div>
+              <div class="tool-desc">
+                Combine multiple PDF files into one clean, ordered document in
+                seconds. Upload your files, drag to reorder if needed, and
+                download the merged result instantly.
+              </div>
+              <div class="tool-tags">
+                <span class="tag">Drag & Drop</span>
+                <span class="tag">Reorder Pages</span>
+                <span class="tag">Bulk Merge</span>
+                <span class="tag">Instant Download</span>
+              </div>
+            </div>
+            <div class="tool-arrow">→</div>
+          </a>
+
+          <a href="./word_to_pdf.html" class="tool-row t-blue">
+            <div class="tool-icon-box">📝</div>
+            <div class="tool-body">
+              <div class="tool-category">Document Conversion</div>
+              <div class="tool-name">Word to PDF</div>
+              <div class="tool-desc">
+                Convert .doc and .docx files to PDF without losing any
+                formatting. Tables, fonts, images — everything stays exactly as
+                designed. Perfect for resumes, reports, and official documents.
+              </div>
+              <div class="tool-tags">
+                <span class="tag">Formatting Preserved</span>
+                <span class="tag">Batch Convert</span>
+                <span class="tag">.doc + .docx</span>
+              </div>
+            </div>
+            <div class="tool-arrow">→</div>
+          </a>
+
+          <a href="#" class="tool-row t-green">
+            <div class="tool-icon-box">🔄</div>
+            <div class="tool-body">
+              <div class="tool-category">Document Conversion</div>
+              <div class="tool-name">PDF to Word</div>
+              <div class="tool-desc">
+                Extract a fully editable Word document from any PDF — including
+                scanned ones. Smart text recognition keeps your headings,
+                tables, and paragraphs neatly intact and ready to edit.
+              </div>
+              <div class="tool-tags">
+                <span class="tag">OCR for Scanned PDFs</span>
+                <span class="tag">Tables Intact</span>
+                <span class="tag">Editable Output</span>
+              </div>
+            </div>
+            <div class="tool-arrow">→</div>
+          </a>
+        </div>
+
+        <!-- PAID TOOLS -->
+        <div class="cat-header reveal" style="margin-top: 48px">
+          <span class="cat-badge cat-paid">✦ Paid Tools — AI Powered</span>
+          <div class="cat-line"></div>
+          <span class="cat-desc">Advanced AI automation</span>
+        </div>
+
+        <div class="tools-list reveal">
+          <a href="#" class="tool-row t-purple">
+            <span class="paid-chip">✦ Paid Plan</span>
+            <div class="tool-icon-box">✉️</div>
+            <div class="tool-body">
+              <div class="tool-category">AI Productivity</div>
+              <div class="tool-name">AI Bulk Email Unsubscriber</div>
+              <div class="tool-desc">
+                Tired of a cluttered inbox? Our AI scans your subscriptions,
+                identifies unwanted senders, and bulk-unsubscribes you from
+                newsletters and promotions in minutes — safely and without any
+                manual effort on your part.
+              </div>
+              <div class="tool-tags">
+                <span class="tag">AI Detection</span>
+                <span class="tag">Bulk Unsubscribe</span>
+                <span class="tag">Smart Categorisation</span>
+                <span class="tag">Inbox Health Score</span>
+              </div>
+            </div>
+            <div class="tool-arrow">→</div>
+          </a>
+
+          <a href="#" class="tool-row t-teal">
+            <span class="paid-chip">✦ Paid Plan</span>
+            <div class="tool-icon-box">🤖</div>
+            <div class="tool-body">
+              <div class="tool-category">AI Business Tool</div>
+              <div class="tool-name">AI Support Center</div>
+              <div class="tool-desc">
+                Set up an AI support agent for your business. Train it on your
+                FAQs, documents, and product information — and let it handle
+                customer queries automatically, around the clock. Ideal for
+                small businesses, startups, and growing teams.
+              </div>
+              <div class="tool-tags">
+                <span class="tag">Train on Your Docs</span>
+                <span class="tag">24/7 Auto-Reply</span>
+                <span class="tag">Escalation Routing</span>
+                <span class="tag">Analytics Dashboard</span>
+              </div>
+            </div>
+            <div class="tool-arrow">→</div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- HOW IT WORKS — DOCUMENT TOOLS -->
+    <div
+      id="how-doc"
+      style="
+        background: var(--white);
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+      "
+    >
+      <div class="section">
+        <div class="reveal">
+          <div class="sec-label">How It Works</div>
+          <h2 class="sec-title">Document tools — step by step</h2>
+          <p class="sec-desc">
+            Pick the tool you need below and see exactly how it works. All three
+            document tools follow a simple upload → process → download flow.
+          </p>
+        </div>
+
+        <!-- Tabs -->
+        <div class="how-tabs reveal" style="margin-top: 36px">
+          <div class="how-tab active" onclick="showPanel('merge', this)">
+            📄 PDF Merger
+          </div>
+          <div class="how-tab" onclick="showPanel('w2p', this)">
+            📝 Word to PDF
+          </div>
+          <div class="how-tab" onclick="showPanel('p2w', this)">
+            🔄 PDF to Word
+          </div>
+        </div>
+
+        <!-- Step flow (shared visual) -->
+        <div class="step-flow reveal">
+          <div class="step-card">
+            <div class="step-num-wrap active-step">📂</div>
+            <div class="step-title">Upload Files</div>
+            <div class="step-desc">
+              Drag and drop your files or click to browse. Any size, from any
+              device.
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num-wrap">⚙️</div>
+            <div class="step-title">We Process</div>
+            <div class="step-desc">
+              Our tool handles conversion or merging automatically in seconds.
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num-wrap">👀</div>
+            <div class="step-title">Preview Output</div>
+            <div class="step-desc">
+              Check your result before downloading. Make sure everything looks
+              right.
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-num-wrap">⬇️</div>
+            <div class="step-title">Download</div>
+            <div class="step-desc">
+              Your file is ready. Download instantly — no email or login
+              required.
+            </div>
+          </div>
+        </div>
+
+        <!-- Panel: PDF Merger -->
+        <div class="how-panel active reveal" id="panel-merge">
+          <div class="panel-inner">
+            <div class="panel-left">
+              <h4>How PDF Merger works</h4>
+              <p>
+                Combine any number of PDFs into one neat, ordered file. You
+                control the page order — no quality loss, no watermarks.
+              </p>
+              <div class="panel-steps">
+                <div class="ps-item">
+                  <div class="ps-dot">1</div>
+                  <div class="ps-text">
+                    <strong>Upload multiple PDFs</strong> — drag them in or
+                    click to browse from your device.
+                  </div>
+                </div>
+                <div class="ps-item">
+                  <div class="ps-dot">2</div>
+                  <div class="ps-text">
+                    <strong>Reorder if needed</strong> — drag thumbnails up or
+                    down to set the page sequence.
+                  </div>
+                </div>
+                <div class="ps-item">
+                  <div class="ps-dot">3</div>
+                  <div class="ps-text">
+                    <strong>Click Merge</strong> — all files are combined into
+                    one clean PDF instantly.
+                  </div>
+                </div>
+                <div class="ps-item">
+                  <div class="ps-dot">4</div>
+                  <div class="ps-text">
+                    <strong>Download the result</strong> — your merged PDF is
+                    ready in seconds.
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="panel-right">
+              <h4>Example</h4>
+              <div class="mock-file">
+                <div class="mock-icon" style="background: #fff0e6">📄</div>
+                <div>
+                  <div class="mock-name">report_q1.pdf</div>
+                  <div class="mock-size">1.2 MB · 12 pages</div>
+                </div>
+                <div class="mock-check">✓</div>
+              </div>
+              <div class="mock-file">
+                <div class="mock-icon" style="background: #fff0e6">📄</div>
+                <div>
+                  <div class="mock-name">invoice_march.pdf</div>
+                  <div class="mock-size">0.4 MB · 3 pages</div>
+                </div>
+                <div class="mock-check">✓</div>
+              </div>
+              <div class="mock-file">
+                <div class="mock-icon" style="background: #fff0e6">📄</div>
+                <div>
+                  <div class="mock-name">appendix.pdf</div>
+                  <div class="mock-size">2.1 MB · 8 pages</div>
+                </div>
+                <div class="mock-check">✓</div>
+              </div>
+              <div class="progress-bar"><div class="progress-fill"></div></div>
+              <div class="mock-output">
+                <div class="mock-icon" style="background: #c6e8c5">✅</div>
+                <div>
+                  <div class="mock-name">merged_output.pdf</div>
+                  <div class="mock-size" style="color: var(--green)">
+                    3.7 MB · 23 pages — Ready to download
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Panel: Word to PDF -->
+        <div class="how-panel" id="panel-w2p">
+          <div class="panel-inner">
+            <div class="panel-left">
+              <h4>How Word to PDF works</h4>
+              <p>
+                Convert .doc or .docx files to PDF without losing a single
+                detail — fonts, images, tables, and layout are all preserved
+                perfectly.
+              </p>
+              <div class="panel-steps">
+                <div class="ps-item">
+                  <div class="ps-dot">1</div>
+                  <div class="ps-text">
+                    <strong>Upload your Word file</strong> — .doc or .docx, any
+                    version.
+                  </div>
+                </div>
+                <div class="ps-item">
+                  <div class="ps-dot">2</div>
+                  <div class="ps-text">
+                    <strong>Automatic conversion</strong> — our tool processes
+                    your document and preserves all formatting.
+                  </div>
+                </div>
+                <div class="ps-item">
+                  <div class="ps-dot">3</div>
+                  <div class="ps-text">
+                    <strong>Preview the PDF</strong> — verify fonts, images, and
+                    layout before saving.
+                  </div>
+                </div>
+                <div class="ps-item">
+                  <div class="ps-dot">4</div>
+                  <div class="ps-text">
+                    <strong>Download your PDF</strong> — ready for sharing,
+                    printing, or submission.
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="panel-right">
+              <h4>Example</h4>
+              <div class="mock-file">
+                <div class="mock-icon" style="background: #e8f0ff">📝</div>
+                <div>
+                  <div class="mock-name">my_resume.docx</div>
+                  <div class="mock-size">0.8 MB · Word Document</div>
+                </div>
+                <div class="mock-check">✓</div>
+              </div>
+              <div class="progress-bar">
+                <div
+                  class="progress-fill"
+                  style="
+                    background: linear-gradient(90deg, var(--blue), #6fa8ff);
+                  "
+                ></div>
+              </div>
+              <div
+                style="
+                  font-size: 0.82rem;
+                  color: var(--muted);
+                  margin-top: 10px;
+                "
+              >
+                Converting… preserving fonts, tables, and images
+              </div>
+              <div
+                class="mock-output"
+                style="
+                  background: var(--blue-lt);
+                  border-color: #aac4ff;
+                  margin-top: 12px;
+                "
+              >
+                <div class="mock-icon" style="background: #aac4ff">✅</div>
+                <div>
+                  <div class="mock-name" style="color: var(--blue)">
+                    my_resume.pdf
+                  </div>
+                  <div class="mock-size" style="color: var(--blue)">
+                    0.9 MB · PDF — Layout preserved · Ready
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Panel: PDF to Word -->
+        <div class="how-panel" id="panel-p2w">
+          <div class="panel-inner">
+            <div class="panel-left">
+              <h4>How PDF to Word works</h4>
+              <p>
+                Turn any PDF — including scanned documents — into a fully
+                editable Word file. Our OCR engine extracts text accurately,
+                keeping headings, tables, and paragraphs in place.
+              </p>
+              <div class="panel-steps">
+                <div class="ps-item">
+                  <div class="ps-dot">1</div>
+                  <div class="ps-text">
+                    <strong>Upload your PDF</strong> — works with text-based and
+                    scanned PDFs.
+                  </div>
+                </div>
+                <div class="ps-item">
+                  <div class="ps-dot">2</div>
+                  <div class="ps-text">
+                    <strong>OCR & extraction</strong> — our engine reads and
+                    structures your content automatically.
+                  </div>
+                </div>
+                <div class="ps-item">
+                  <div class="ps-dot">3</div>
+                  <div class="ps-text">
+                    <strong>Review the output</strong> — check that tables,
+                    headings, and paragraphs are correct.
+                  </div>
+                </div>
+                <div class="ps-item">
+                  <div class="ps-dot">4</div>
+                  <div class="ps-text">
+                    <strong>Download the .docx</strong> — edit it in Word,
+                    Google Docs, or any editor.
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="panel-right">
+              <h4>Example</h4>
+              <div class="mock-file">
+                <div class="mock-icon" style="background: #eaf6e9">🔄</div>
+                <div>
+                  <div class="mock-name">scanned_contract.pdf</div>
+                  <div class="mock-size">3.2 MB · Scanned · 6 pages</div>
+                </div>
+                <div class="mock-check">✓</div>
+              </div>
+              <div class="progress-bar">
+                <div
+                  class="progress-fill"
+                  style="
+                    background: linear-gradient(90deg, var(--green), #6dcf6a);
+                  "
+                ></div>
+              </div>
+              <div
+                style="
+                  font-size: 0.82rem;
+                  color: var(--muted);
+                  margin-top: 10px;
+                "
+              >
+                Running OCR… detecting text, tables, and structure
+              </div>
+              <div
+                class="mock-output"
+                style="
+                  background: #d6f0d5;
+                  border-color: #8ecf8d;
+                  margin-top: 12px;
+                "
+              >
+                <div class="mock-icon" style="background: #8ecf8d">✅</div>
+                <div>
+                  <div class="mock-name">scanned_contract.docx</div>
+                  <div class="mock-size" style="color: var(--green)">
+                    Fully editable · Tables extracted · Ready
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WHY KALPANATOOLS -->
+    <div id="why">
+      <div class="section">
+        <div class="reveal">
+          <div class="sec-label">Why PranikaTools</div>
+          <h2 class="sec-title">
+            Built for people who just want things to work
+          </h2>
+          <p class="sec-desc">
+            Fast, private, and simple — whether you're a student, a
+            professional, or running a small business.
+          </p>
+        </div>
+
+        <div class="why-grid reveal">
+          <div class="why-card">
+            <div class="why-icon">🆓</div>
+            <div class="why-title">Free Document Tools</div>
+            <div class="why-desc">
+              All three document tools are completely free with no account
+              required. Start using them right now.
+            </div>
+          </div>
+          <div class="why-card">
+            <div class="why-icon">🔒</div>
+            <div class="why-title">Your Files Stay Private</div>
+            <div class="why-desc">
+              Files are processed and immediately deleted. We never store, read,
+              or share your documents with anyone.
+            </div>
+          </div>
+          <div class="why-card">
+            <div class="why-icon">⚡</div>
+            <div class="why-title">Fast Results</div>
+            <div class="why-desc">
+              Most tasks finish in under 5 seconds. No queues, no waiting —
+              built for people who value their time.
+            </div>
+          </div>
+          <div class="why-card">
+            <div class="why-icon">📱</div>
+            <div class="why-title">Works on Any Device</div>
+            <div class="why-desc">
+              Phone, tablet, or computer — everything runs in your browser. No
+              app download, no installation required.
+            </div>
+          </div>
+          <div class="why-card">
+            <div class="why-icon">🧑‍💻</div>
+            <div class="why-title">No Learning Curve</div>
+            <div class="why-desc">
+              If you can upload a file and click a button, you can use any tool
+              here. No tutorials, no documentation needed.
+            </div>
+          </div>
+          <div class="why-card">
+            <div class="why-icon">🚀</div>
+            <div class="why-title">Always Improving</div>
+            <div class="why-desc">
+              We ship updates regularly and add tools based on real user
+              feedback. More tools are on the way.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ABOUT -->
+    <div
+      id="about"
+      style="background: var(--white); border-top: 1px solid var(--border)"
+    >
+      <div class="section">
+        <div class="about-layout">
+          <div class="reveal">
+            <div class="sec-label">About Us</div>
+            <h2 class="sec-title">
+              We believe great software should just work.
+            </h2>
+            <div class="about-body" style="margin-top: 20px">
+              <p>
+                PranikaTools started with a simple frustration — every small
+                task like merging a PDF or converting a Word file required
+                downloading heavy software, paying for expensive subscriptions,
+                or signing up for yet another platform.
+              </p>
+              <p>
+                We're building PranikaTools to be the go-to toolkit for anyone
+                who needs to get document work done quickly: students,
+                professionals, small business owners, and teams of all sizes
+                worldwide.
+              </p>
+              <p>
+                No bloat. No unnecessary complexity. Just tools that work,
+                available to anyone with a browser and an internet connection.
+              </p>
+            </div>
+            <div class="about-values">
+              <div class="av-item">
+                <div class="av-dot">🌍</div>
+                <div class="av-text">
+                  <strong>Built for everyone.</strong> Simple tools accessible
+                  to anyone, regardless of technical background.
+                </div>
+              </div>
+              <div class="av-item">
+                <div class="av-dot">🔐</div>
+                <div class="av-text">
+                  <strong>Privacy respected.</strong> We never store your files.
+                  Your documents belong to you alone.
+                </div>
+              </div>
+              <div class="av-item">
+                <div class="av-dot">⚡</div>
+                <div class="av-text">
+                  <strong>Speed matters.</strong> Every second saved is real
+                  time returned to you.
+                </div>
+              </div>
+              <div class="av-item">
+                <div class="av-dot">🚀</div>
+                <div class="av-text">
+                  <strong>Continuously growing.</strong> More tools added based
+                  on what users actually need.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="about-cards reveal">
+            <div class="acard">
+              <div class="acard-icon" style="background: var(--orange-lt)">
+                📦
+              </div>
+              <div>
+                <div class="acard-num">5 Tools</div>
+                <div class="acard-label">Available now — more on the way</div>
+              </div>
+            </div>
+            <div class="acard">
+              <div class="acard-icon" style="background: var(--green-lt)">
+                ✓
+              </div>
+              <div>
+                <div class="acard-num">3 Free</div>
+                <div class="acard-label">
+                  Document tools — no account needed
+                </div>
+              </div>
+            </div>
+            <div class="acard">
+              <div class="acard-icon" style="background: var(--purple-lt)">
+                ✦
+              </div>
+              <div>
+                <div class="acard-num">2 AI Tools</div>
+                <div class="acard-label">Paid plans with real automation</div>
+              </div>
+            </div>
+            <div class="acard">
+              <div class="acard-icon" style="background: var(--blue-lt)">
+                🌐
+              </div>
+              <div>
+                <div class="acard-num">100% Web</div>
+                <div class="acard-label">No install needed on any device</div>
+              </div>
+            </div>
+            <div class="acard">
+              <div class="acard-icon" style="background: var(--green-lt)">
+                🔒
+              </div>
+              <div>
+                <div class="acard-num">Zero Retention</div>
+                <div class="acard-label">
+                  Files deleted right after processing
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-section" style="padding-top: 72px">
+      <div class="cta-box reveal">
+        <h2>Ready to get started?</h2>
+        <p>
+          Try the free document tools now — no sign-up, no credit card, no
+          friction.
+        </p>
+        <div class="cta-btns">
+          <a href="#tools" class="btn-white">Explore All Tools →</a>
+          <a href="#about" class="btn-ghost-white">Learn About Us</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="footer-inner">
+        <div class="footer-top">
+          <div class="footer-brand">
+            <a href="#" class="logo">
+              <span class="logo-mark">Pa</span>
+              <span class="logo-text">Pranika<span>Tools</span></span>
+            </a>
+            <p>
+              Simple, fast tools for everyday document work and AI-powered
+              productivity — available to anyone, anywhere.
+            </p>
+          </div>
+          <div class="footer-col">
+            <h5>Free Tools</h5>
+            <ul>
+              <li><a href="#">PDF Merger</a></li>
+              <li><a href="#">Word to PDF</a></li>
+              <li><a href="#">PDF to Word</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h5>AI Tools</h5>
+            <ul>
+              <li><a href="#">AI Email Unsubscriber</a></li>
+              <li><a href="#">AI Support Center</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h5>Company</h5>
+            <ul>
+              <li><a href="#about">About Us</a></li>
+              <li><a href="#">Blog</a></li>
+              <li><a href="#">Contact</a></li>
+              <li><a href="#">Privacy Policy</a></li>
+              <li><a href="#">Terms of Use</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <span>© 2025 PranikaTools. All rights reserved.</span>
+          <span>Simple tools. Real results.</span>
+        </div>
+      </div>
+    </footer>
+
+    <div class="bottom-bar"></div>
+
+    <script>
+      // Hamburger menu
+      const ham = document.getElementById("hamburger");
+      const mob = document.getElementById("mobileMenu");
+      ham.addEventListener("click", () => {
+        ham.classList.toggle("open");
+        mob.classList.toggle("open");
+      });
+      function closeMob() {
+        ham.classList.remove("open");
+        mob.classList.remove("open");
+      }
+      // Close on outside click
+      document.addEventListener("click", (e) => {
+        if (!ham.contains(e.target) && !mob.contains(e.target)) closeMob();
+      });
+
+      // Tab switching
+      function showPanel(id, el) {
+        document
+          .querySelectorAll(".how-panel")
+          .forEach((p) => p.classList.remove("active"));
+        document
+          .querySelectorAll(".how-tab")
+          .forEach((t) => t.classList.remove("active"));
+        document.getElementById("panel-" + id).classList.add("active");
+        el.classList.add("active");
+      }
+
+      // Scroll reveal
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e, i) => {
+            if (e.isIntersecting) {
+              setTimeout(() => e.target.classList.add("visible"), i * 60);
+              observer.unobserve(e.target);
+            }
+          });
+        },
+        { threshold: 0.07, rootMargin: "0px 0px -40px 0px" },
+      );
+      document
+        .querySelectorAll(".reveal")
+        .forEach((el) => observer.observe(el));
+
+      // Nav active highlight
+      window.addEventListener("scroll", () => {
+        const ids = ["tools", "how-doc", "why", "about"];
+        let cur = "";
+        ids.forEach((id) => {
+          const el = document.getElementById(id);
+          if (el && window.scrollY >= el.offsetTop - 80) cur = id;
+        });
+        document.querySelectorAll(".nav-links a").forEach((a) => {
+          const match = cur && a.getAttribute("href") === "#" + cur;
+          a.style.color = match ? "var(--navy)" : "";
+          a.style.fontWeight = match ? "600" : "";
+        });
+      });
+    </script>
+  </body>
+</html>
