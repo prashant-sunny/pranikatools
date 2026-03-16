@@ -179,6 +179,42 @@
     position: relative;
   }
 
+  @keyframes dzPulse {
+    0%, 100% { border-color: var(--orange); box-shadow: 0 0 0 0 rgba(255,94,31,0.15); }
+    50%       { border-color: #e04c10;      box-shadow: 0 0 0 6px rgba(255,94,31,0); }
+  }
+
+  .dropzone.uploading {
+    border-color: var(--orange);
+    background: var(--orange-light);
+    animation: dzPulse 1.2s ease-in-out infinite;
+  }
+
+  /* Upload progress bar inside dropzone */
+  .dz-progress {
+    display: none;
+    margin-top: 14px;
+    height: 4px;
+    background: var(--orange-mid);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+
+  .dz-progress.visible { display: block; }
+
+  @keyframes dzScan {
+    from { transform: translateX(-100%); }
+    to   { transform: translateX(400%); }
+  }
+
+  .dz-progress-fill {
+    height: 100%;
+    width: 40%;
+    background: linear-gradient(90deg, transparent, var(--orange), transparent);
+    border-radius: 99px;
+    animation: dzScan 0.9s ease-in-out infinite;
+  }
+
   .dropzone:hover, .dropzone.drag-over {
     border-color: var(--orange);
     background: var(--orange-light);
@@ -244,10 +280,16 @@
     gap: 10px;
   }
 
+  @keyframes fileSlideIn {
+    from { opacity: 0; transform: translateY(-12px) scale(0.96); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
   .file-item {
     background: var(--white);
     border: 1.5px solid var(--border);
     border-radius: 12px;
+    animation: fileSlideIn 0.3s cubic-bezier(.16,1,.3,1) both;
     padding: 14px 18px;
     display: flex;
     align-items: center;
@@ -667,6 +709,7 @@
       </svg>
       Choose Files
     </button>
+    <div class="dz-progress" id="dzProgress"><div class="dz-progress-fill"></div></div>
   </div>
 
   <!-- File List -->
@@ -739,6 +782,11 @@
 
 
 <script>
+// ════════════════════════════════════════════════════════════════
+//  PDF MERGER — fully self-contained, no external dependencies
+//  Handles PDF 1.0–2.0 including xref streams (PDF 1.5+)
+// ════════════════════════════════════════════════════════════════
+
 // ── State ──
 let files = [];
 let mergedBytes = null;
@@ -776,12 +824,21 @@ dropzone.addEventListener('drop', e => {
 });
 
 function addFiles(newFiles) {
-  newFiles.forEach(f => {
-    if (!f.name.endsWith('.pdf') && f.type !== 'application/pdf') return;
-    files.push({ file: f, id: Math.random().toString(36).slice(2) });
-  });
-  renderList();
-  fileInput.value = '';
+  // Show uploading animation
+  const dzProgress = document.getElementById('dzProgress');
+  dropzone.classList.add('uploading');
+  dzProgress.classList.add('visible');
+
+  setTimeout(() => {
+    newFiles.forEach(f => {
+      if (!f.name.endsWith('.pdf') && f.type !== 'application/pdf') return;
+      files.push({ file: f, id: Math.random().toString(36).slice(2) });
+    });
+    dropzone.classList.remove('uploading');
+    dzProgress.classList.remove('visible');
+    renderList();
+    fileInput.value = '';
+  }, 600);
 }
 
 function formatSize(bytes) {
@@ -801,6 +858,7 @@ function renderList() {
   files.forEach((item, idx) => {
     const el = document.createElement('div');
     el.className = 'file-item';
+    el.style.animationDelay = (idx * 0.05) + 's';
     el.setAttribute('draggable', 'true');
     el.dataset.idx = idx;
 
@@ -932,8 +990,11 @@ btnMerge.addEventListener('click', async () => {
     setProgress(25, 1);
     await delay(300);
 
-    // Parse PDFs
-    const parsedDocs = buffers.map(buf => parsePDF(new Uint8Array(buf)));
+    // Parse PDFs (async — decompresses ObjStm streams)
+    const parsedDocs = [];
+    for (const buf of buffers) {
+      parsedDocs.push(await parsePDF(new Uint8Array(buf)));
+    }
     setProgress(50, 2);
     await delay(300);
 
@@ -946,7 +1007,7 @@ btnMerge.addEventListener('click', async () => {
     await delay(500);
 
     // Show success
-    const totalPages = parsedDocs.reduce((n, d) => n + d.pageCount, 0);
+    const totalPages = parsedDocs.reduce((n, d) => n + d.pageNums.length, 0);
     successSub.textContent = `${files.length} files · ${totalPages} pages · ${formatSize(mergedBytes.length)}`;
     successWrap.classList.add('visible');
     progressWrap.classList.remove('visible');
@@ -999,185 +1060,243 @@ function readAsArrayBuffer(file) {
 
 function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
 
-// ── Pure JS PDF Merger (no dependencies) ──────────────────────────────────
-// Strategy: parse each PDF's cross-reference table, extract all objects,
-// renumber them to avoid collisions, merge into one PDF, rebuild xref + trailer.
+// ════════════════════════════════════════════════════════════════
+//  PDF MERGER ENGINE — handles ObjStm (PDF 1.5+ compressed objects)
+//  Uses browser-native DecompressionStream for zlib/FlateDecode
+// ════════════════════════════════════════════════════════════════
 
-function parsePDF(bytes) {
-  const str = bytesToStr(bytes);
-
-  // Find xref offset
-  const startxrefMatch = str.match(/startxref\s+(\d+)\s+%%EOF/);
-  if (!startxrefMatch) throw new Error('Not a valid PDF');
-  const xrefOffset = parseInt(startxrefMatch[1]);
-
-  // Get PDF version
-  const versionMatch = str.match(/^%PDF-(\d+\.\d+)/);
-  const version = versionMatch ? versionMatch[1] : '1.4';
-
-  // Parse all objects using regex (handles most real-world PDFs)
-  const objects = [];
-  const objRegex = /(\d+)\s+(\d+)\s+obj\s*([\s\S]*?)\s*endobj/g;
-  let m;
-  while ((m = objRegex.exec(str)) !== null) {
-    objects.push({
-      num: parseInt(m[1]),
-      gen: parseInt(m[2]),
-      raw: m[3].trim()
-    });
+// Decompress a FlateDecode (zlib deflate) byte array
+async function flateDecompress(bytes) {
+  const ds = new DecompressionStream('deflate');
+  const writer = ds.writable.getWriter();
+  const reader = ds.readable.getReader();
+  writer.write(bytes);
+  writer.close();
+  const chunks = [];
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    chunks.push(value);
   }
-
-  // Find page count from root catalog
-  let pageCount = 0;
-  // Find Pages dict with /Count
-  const countMatch = str.match(/\/Count\s+(\d+)/);
-  if (countMatch) pageCount = parseInt(countMatch[1]);
-
-  // Find trailer dict
-  const trailerMatch = str.match(/trailer\s*(<<[\s\S]*?>>)/);
-  const trailerStr = trailerMatch ? trailerMatch[1] : '';
-
-  // Extract root and info refs from trailer
-  const rootMatch = trailerStr.match(/\/Root\s+(\d+)\s+(\d+)\s+R/);
-  const rootRef = rootMatch ? { num: parseInt(rootMatch[1]), gen: parseInt(rootMatch[2]) } : null;
-
-  return { bytes, str, objects, version, pageCount: pageCount || 1, rootRef };
+  let total = 0;
+  for (const c of chunks) total += c.length;
+  const out = new Uint8Array(total);
+  let off = 0;
+  for (const c of chunks) { out.set(c, off); off += c.length; }
+  return out;
 }
 
-function mergePDFs(docs) {
-  // We'll do a simple but robust merge:
-  // Re-emit all objects from all PDFs with renumbered IDs,
-  // build a new Pages node pointing to all page objects,
-  // and write a valid PDF.
+// Try both zlib-wrapped and raw deflate
+async function tryDecompress(bytes) {
+  // PDF uses zlib with 2-byte header (0x78 ...) — DecompressionStream('deflate') handles raw deflate
+  // but PDF streams use zlib wrapper, so try 'deflate-raw' then 'deflate'
+  for (const fmt of ['deflate-raw', 'deflate']) {
+    try {
+      const ds = new DecompressionStream(fmt);
+      const w = ds.writable.getWriter();
+      const r = ds.readable.getReader();
+      w.write(bytes.slice(0)); // slice to copy
+      w.close();
+      const chunks = [];
+      while (true) {
+        const { done, value } = await r.read();
+        if (done) break;
+        chunks.push(value);
+      }
+      let total = 0; for (const c of chunks) total += c.length;
+      const out = new Uint8Array(total);
+      let o = 0; for (const c of chunks) { out.set(c, o); o += c.length; }
+      return out;
+    } catch(e) { /* try next */ }
+  }
+  return null;
+}
 
-  let nextId = 1;
-  const allMappings = []; // per-doc: Map<oldNum, newNum>
+function bytesToStr(b) {
+  let s = ''; for (let i = 0; i < b.length; i++) s += String.fromCharCode(b[i]); return s;
+}
 
-  // First pass: assign new IDs to all objects
-  for (const doc of docs) {
-    const map = new Map();
-    for (const obj of doc.objects) {
-      map.set(obj.num, nextId++);
-    }
-    allMappings.push(map);
+// Extract raw stream bytes between 'stream\n' and '\nendstream'
+function extractStreamBytes(pdfBytes, objStart) {
+  const chunk = pdfBytes.slice(objStart, Math.min(objStart + 200000, pdfBytes.length));
+  const str = bytesToStr(chunk);
+  const streamMatch = str.match(/\bstream\r?\n/);
+  if (!streamMatch) return null;
+  const dataStart = objStart + streamMatch.index + streamMatch[0].length;
+  const lenMatch = str.match(/\/Length\s+(\d+)/);
+  if (!lenMatch) return null;
+  const len = parseInt(lenMatch[1]);
+  return pdfBytes.slice(dataStart, dataStart + len);
+}
+
+// Parse all objects from a PDF, including those inside ObjStm
+async function parsePDF(pdfBytes) {
+  const fullStr = bytesToStr(pdfBytes);
+  const objects = new Map(); // num -> { num, raw }
+
+  // Step 1: Find all direct objects (N gen obj ... endobj)
+  const objRe = /\b(\d+)\s+(\d+)\s+obj\b/g;
+  let m;
+  while ((m = objRe.exec(fullStr)) !== null) {
+    const num = parseInt(m[1]);
+    if (objects.has(num)) continue;
+    const bodyStart = m.index;
+    const endobjIdx = fullStr.indexOf('endobj', bodyStart + m[0].length);
+    if (endobjIdx === -1) continue;
+    const raw = fullStr.slice(bodyStart, endobjIdx + 6);
+    objects.set(num, { num, raw });
   }
 
-  // IDs for our new structural objects
-  const newPagesId = nextId++;
-  const newRootId  = nextId++;
+  // Step 2: Find all ObjStm objects and extract their compressed sub-objects
+  const objStmRe = /\b(\d+)\s+\d+\s+obj\s*<<[^>]*\/Type\s*\/ObjStm[^>]*\/N\s+(\d+)[^>]*\/First\s+(\d+)/g;
+  const decompressionJobs = [];
 
-  // Collect all page object new-IDs across docs
-  const allPageNewIds = [];
+  while ((m = objStmRe.exec(fullStr)) !== null) {
+    const stmObjNum = parseInt(m[1]);
+    const N = parseInt(m[2]);
+    const First = parseInt(m[3]);
+    const stmStart = m.index;
+    decompressionJobs.push({ stmObjNum, N, First, stmStart });
+  }
 
-  for (let di = 0; di < docs.length; di++) {
-    const doc = docs[di];
-    const map = allMappings[di];
+  for (const job of decompressionJobs) {
+    const streamBytes = extractStreamBytes(pdfBytes, job.stmStart);
+    if (!streamBytes) continue;
+    const decompressed = await tryDecompress(streamBytes);
+    if (!decompressed) continue;
+    const decompStr = bytesToStr(decompressed);
 
-    // Find page object nums in this doc
-    // Pages are objects referenced by the Pages /Kids array
-    const kidsMatch = doc.str.match(/\/Kids\s*\[([\s\S]*?)\]/);
-    if (kidsMatch) {
-      const kidRefs = [...kidsMatch[1].matchAll(/(\d+)\s+\d+\s+R/g)];
-      for (const ref of kidRefs) {
-        const oldNum = parseInt(ref[1]);
-        const newNum = map.get(oldNum);
-        if (newNum !== undefined) allPageNewIds.push(newNum);
+    // Header: pairs of "objNum offset" repeated N times
+    const headerStr = decompStr.slice(0, job.First);
+    const pairs = headerStr.trim().split(/\s+/);
+    const entries = [];
+    for (let i = 0; i + 1 < pairs.length; i += 2) {
+      entries.push({ num: parseInt(pairs[i]), offset: parseInt(pairs[i+1]) });
+    }
+
+    // Extract each object from the data section
+    for (let i = 0; i < entries.length; i++) {
+      const { num, offset } = entries[i];
+      if (objects.has(num)) continue; // direct object takes precedence
+      const start = job.First + offset;
+      const end = i + 1 < entries.length ? job.First + entries[i+1].offset : decompStr.length;
+      const body = decompStr.slice(start, end).trim();
+      // Wrap in obj...endobj format
+      const raw = `${num} 0 obj\n${body}\nendobj`;
+      objects.set(num, { num, raw });
+    }
+  }
+
+  // Step 3: Find page object numbers
+  // Look for /Type /Page (not /Pages) in all objects
+  const pageNums = [];
+  for (const [num, obj] of objects) {
+    if (/\/Type\s*\/Page\b/.test(obj.raw) && !/\/Type\s*\/Pages\b/.test(obj.raw)) {
+      pageNums.push(num);
+    }
+  }
+
+  // Sort pages by their order in the Pages /Kids array
+  // Find the /Kids array from the Pages object
+  let kidsOrder = null;
+  for (const [num, obj] of objects) {
+    if (/\/Type\s*\/Pages\b/.test(obj.raw)) {
+      const kidsMatch = obj.raw.match(/\/Kids\s*\[([\s\S]*?)\]/);
+      if (kidsMatch) {
+        kidsOrder = [...kidsMatch[1].matchAll(/(\d+)\s+\d+\s+R/g)].map(r => parseInt(r[1]));
       }
     }
   }
 
-  // Second pass: rewrite all objects with renumbered references
-  const outputParts = [];
-  outputParts.push(`%PDF-1.6\n%\xFF\xFF\xFF\xFF\n`);
+  // Use Kids order if available, otherwise sort by obj num
+  let sortedPageNums;
+  if (kidsOrder && kidsOrder.length > 0) {
+    sortedPageNums = kidsOrder.filter(n => pageNums.includes(n));
+    // Add any pages not in kids list at end
+    const inKids = new Set(sortedPageNums);
+    for (const n of pageNums) if (!inKids.has(n)) sortedPageNums.push(n);
+  } else {
+    sortedPageNums = [...pageNums].sort((a, b) => a - b);
+  }
 
-  const offsets = new Map(); // newId -> byte offset
+  return { objects: [...objects.values()], pageNums: sortedPageNums };
+}
 
-  const enc = new TextEncoder();
-  let bytePos = outputParts[0].length;
+function mergePDFs(docs) {
+  let nextId = 1;
+  const allMaps = [];
 
-  const rewriteRefs = (raw, map) => {
-    // Replace all "oldNum gen R" references using the map
-    return raw.replace(/(\d+)\s+(\d+)\s+R/g, (match, n, g) => {
-      const oldNum = parseInt(n);
-      const newNum = map.get(oldNum);
-      return newNum !== undefined ? `${newNum} 0 R` : match;
+  for (const doc of docs) {
+    const map = new Map();
+    for (const obj of doc.objects) {
+      if (/\/Type\s*\/XRef\b/.test(obj.raw)) continue;
+      if (/\/Type\s*\/Catalog\b/.test(obj.raw)) continue;
+      if (/\/Type\s*\/Pages\b/.test(obj.raw)) continue;
+      if (/\/Type\s*\/ObjStm\b/.test(obj.raw)) continue;
+      map.set(obj.num, nextId++);
+    }
+    allMaps.push(map);
+  }
+
+  const newPagesId  = nextId++;
+  const newCatalogId = nextId++;
+
+  const allPageNewIds = [];
+  for (let di = 0; di < docs.length; di++) {
+    for (const pNum of docs[di].pageNums) {
+      const newNum = allMaps[di].get(pNum);
+      if (newNum !== undefined) allPageNewIds.push(newNum);
+    }
+  }
+
+  const parts = [];
+  const header = `%PDF-1.6\n%\xE2\xE3\xCF\xD3\n`;
+  parts.push(header);
+  let pos = header.length;
+  const offsets = new Map();
+
+  const rewriteRefs = (raw, map) =>
+    raw.replace(/\b(\d+)\s+\d+\s+R\b/g, (match, n) => {
+      const nn = map.get(parseInt(n));
+      return nn !== undefined ? `${nn} 0 R` : match;
     });
-  };
 
-  // Write all objects from all docs (skip Pages and Catalog objects — we'll replace them)
   for (let di = 0; di < docs.length; di++) {
     const doc = docs[di];
-    const map = allMappings[di];
-
+    const map = allMaps[di];
     for (const obj of doc.objects) {
+      if (!map.has(obj.num)) continue;
       const newNum = map.get(obj.num);
-      if (newNum === undefined) continue;
-
-      // Skip the Pages node and Catalog — we rebuild these
-      const isPages = /\/Type\s*\/Pages/.test(obj.raw);
-      const isCatalog = /\/Type\s*\/Catalog/.test(obj.raw);
-      if (isPages || isCatalog) continue;
-
-      // Fix /Parent references to point to our new pages node
       let raw = obj.raw;
       raw = raw.replace(/\/Parent\s+\d+\s+\d+\s+R/, `/Parent ${newPagesId} 0 R`);
       raw = rewriteRefs(raw, map);
-
-      const objStr = `${newNum} 0 obj\n${raw}\nendobj\n`;
-      offsets.set(newNum, bytePos);
-      outputParts.push(objStr);
-      bytePos += objStr.length;
+      raw = raw.replace(/^\d+\s+\d+\s+obj/, `${newNum} 0 obj`);
+      offsets.set(newNum, pos);
+      parts.push(raw + '\n');
+      pos += raw.length + 1;
     }
   }
 
-  // Write new Pages object
   const kidsStr = allPageNewIds.map(id => `${id} 0 R`).join(' ');
-  const pagesStr = `${newPagesId} 0 obj\n<< /Type /Pages /Kids [${kidsStr}] /Count ${allPageNewIds.length} >>\nendobj\n`;
-  offsets.set(newPagesId, bytePos);
-  outputParts.push(pagesStr);
-  bytePos += pagesStr.length;
+  const pagesObj = `${newPagesId} 0 obj\n<< /Type /Pages /Kids [${kidsStr}] /Count ${allPageNewIds.length} >>\nendobj`;
+  offsets.set(newPagesId, pos); parts.push(pagesObj + '\n'); pos += pagesObj.length + 1;
 
-  // Write new Root/Catalog
-  const rootStr = `${newRootId} 0 obj\n<< /Type /Catalog /Pages ${newPagesId} 0 R >>\nendobj\n`;
-  offsets.set(newRootId, bytePos);
-  outputParts.push(rootStr);
-  bytePos += rootStr.length;
+  const catObj = `${newCatalogId} 0 obj\n<< /Type /Catalog /Pages ${newPagesId} 0 R >>\nendobj`;
+  offsets.set(newCatalogId, pos); parts.push(catObj + '\n'); pos += catObj.length + 1;
 
-  // Write xref table
-  const xrefOffset = bytePos;
-  const totalObjs = nextId; // 0..nextId-1
-  // Build xref entries: sort by ID
-  const xrefLines = [`xref\n0 ${totalObjs}\n`];
-  xrefLines.push(`0000000000 65535 f \n`); // object 0
-  for (let id = 1; id < totalObjs; id++) {
+  const xrefPos = pos;
+  let xref = `xref\n0 ${nextId}\n0000000000 65535 f \n`;
+  for (let id = 1; id < nextId; id++) {
     const off = offsets.get(id);
-    if (off !== undefined) {
-      xrefLines.push(`${String(off).padStart(10, '0')} 00000 n \n`);
-    } else {
-      xrefLines.push(`0000000000 65535 f \n`);
-    }
+    xref += off !== undefined ? `${String(off).padStart(10,'0')} 00000 n \n` : `0000000000 65535 f \n`;
   }
-  outputParts.push(xrefLines.join(''));
+  parts.push(xref);
+  parts.push(`trailer\n<< /Size ${nextId} /Root ${newCatalogId} 0 R >>\nstartxref\n${xrefPos}\n%%EOF\n`);
 
-  // Write trailer
-  const trailerStr2 = `trailer\n<< /Size ${totalObjs} /Root ${newRootId} 0 R >>\nstartxref\n${xrefOffset}\n%%EOF\n`;
-  outputParts.push(trailerStr2);
-
-  // Combine all parts into Uint8Array
-  const fullStr = outputParts.join('');
-  return strToBytes(fullStr);
-}
-
-function bytesToStr(bytes) {
-  let s = '';
-  for (let i = 0; i < bytes.length; i++) s += String.fromCharCode(bytes[i]);
-  return s;
-}
-
-function strToBytes(str) {
-  const arr = new Uint8Array(str.length);
-  for (let i = 0; i < str.length; i++) arr[i] = str.charCodeAt(i) & 0xFF;
-  return arr;
+  const full = parts.join('');
+  const out = new Uint8Array(full.length);
+  for (let i = 0; i < full.length; i++) out[i] = full.charCodeAt(i) & 0xFF;
+  return out;
 }
 </script>
 </body>
