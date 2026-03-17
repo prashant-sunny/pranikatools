@@ -1,448 +1,854 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Word to PDF – PranikaTools</title>
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Word to PDF – PranikaTools</title>
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
 
-  :root {
-    --blue: #2B5CE6;
-    --blue-dark: #1E4AC7;
-    --blue-light: #EFF4FF;
-    --green: #1D9E75;
-    --green-light: #EAFAF4;
-    --red: #E24B4A;
-    --red-light: #FEF2F2;
-    --amber: #BA7517;
-    --amber-light: #FEFCE8;
-    --gray-50: #F8F9FA;
-    --gray-100: #F1F3F5;
-    --gray-200: #E9ECEF;
-    --gray-300: #DEE2E6;
-    --gray-400: #CED4DA;
-    --gray-500: #ADB5BD;
-    --gray-600: #6C757D;
-    --gray-700: #495057;
-    --gray-800: #343A40;
-    --gray-900: #212529;
-    --radius: 10px;
-    --radius-sm: 6px;
-    --radius-lg: 14px;
-    --shadow: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
-    --shadow-md: 0 4px 12px rgba(0,0,0,.10);
-  }
+      :root {
+        --blue: #2b5ce6;
+        --blue-dark: #1e4ac7;
+        --blue-light: #eff4ff;
+        --green: #1d9e75;
+        --green-light: #eafaf4;
+        --red: #e24b4a;
+        --red-light: #fef2f2;
+        --amber: #ba7517;
+        --amber-light: #fefce8;
+        --gray-50: #f8f9fa;
+        --gray-100: #f1f3f5;
+        --gray-200: #e9ecef;
+        --gray-300: #dee2e6;
+        --gray-400: #ced4da;
+        --gray-500: #adb5bd;
+        --gray-600: #6c757d;
+        --gray-700: #495057;
+        --gray-800: #343a40;
+        --gray-900: #212529;
+        --radius: 10px;
+        --radius-sm: 6px;
+        --radius-lg: 14px;
+        --shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
+        --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
 
-  body {
-    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    background: var(--gray-50);
-    color: var(--gray-900);
-    min-height: 100vh;
-    padding: 0;
-  }
+      body {
+        font-family:
+          "Segoe UI",
+          system-ui,
+          -apple-system,
+          sans-serif;
+        background: var(--gray-50);
+        color: var(--gray-900);
+        min-height: 100vh;
+        padding: 0;
+      }
 
-  /* Top bar */
-  .topbar {
-    background: #fff;
-    border-bottom: 1px solid var(--gray-200);
-    padding: 0 2rem;
-    height: 56px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .logo { font-size: 17px; font-weight: 700; color: var(--gray-900); letter-spacing: -0.3px; }
-  .logo span { color: var(--blue); }
-  .back-link {
-    font-size: 13px; color: var(--gray-600); text-decoration: none;
-    display: flex; align-items: center; gap: 5px;
-  }
-  .back-link:hover { color: var(--blue); }
+      /* Top bar */
+      .topbar {
+        background: #fff;
+        border-bottom: 1px solid var(--gray-200);
+        padding: 0 2rem;
+        height: 56px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .logo {
+        font-size: 17px;
+        font-weight: 700;
+        color: var(--gray-900);
+        letter-spacing: -0.3px;
+      }
+      .logo span {
+        color: var(--blue);
+      }
+      .back-link {
+        font-size: 13px;
+        color: var(--gray-600);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .back-link:hover {
+        color: var(--blue);
+      }
 
-  /* Hero */
-  .hero {
-    background: #fff;
-    border-bottom: 1px solid var(--gray-200);
-    padding: 2rem 2rem 1.75rem;
-  }
-  .hero-inner { max-width: 780px; margin: 0 auto; }
-  .tool-label {
-    font-size: 11px; font-weight: 600; letter-spacing: .08em;
-    text-transform: uppercase; color: var(--blue); margin-bottom: 6px;
-  }
-  .hero h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 8px; }
-  .hero p { font-size: 15px; color: var(--gray-600); line-height: 1.6; max-width: 560px; }
-  .badges { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
-  .badge {
-    font-size: 12px; padding: 4px 12px; border-radius: 20px;
-    border: 1px solid var(--gray-300); color: var(--gray-600);
-    background: var(--gray-50);
-  }
+      /* Hero */
+      .hero {
+        background: #fff;
+        border-bottom: 1px solid var(--gray-200);
+        padding: 2rem 2rem 1.75rem;
+      }
+      .hero-inner {
+        max-width: 780px;
+        margin: 0 auto;
+      }
+      .tool-label {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--blue);
+        margin-bottom: 6px;
+      }
+      .hero h1 {
+        font-size: 28px;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+        margin-bottom: 8px;
+      }
+      .hero p {
+        font-size: 15px;
+        color: var(--gray-600);
+        line-height: 1.6;
+        max-width: 560px;
+      }
+      .badges {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 14px;
+      }
+      .badge {
+        font-size: 12px;
+        padding: 4px 12px;
+        border-radius: 20px;
+        border: 1px solid var(--gray-300);
+        color: var(--gray-600);
+        background: var(--gray-50);
+      }
 
-  /* Main */
-  .main { max-width: 780px; margin: 2rem auto; padding: 0 2rem 4rem; }
+      /* Main */
+      .main {
+        max-width: 780px;
+        margin: 2rem auto;
+        padding: 0 2rem 4rem;
+      }
 
-  /* Drop zone */
-  .drop-zone {
-    border: 2px dashed var(--gray-300);
-    border-radius: var(--radius-lg);
-    padding: 3rem 2rem;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.2s;
-    background: #fff;
-    position: relative;
-  }
-  .drop-zone:hover, .drop-zone.dragover {
-    border-color: var(--blue);
-    background: var(--blue-light);
-  }
-  .drop-zone input[type=file] { display: none; }
-  .drop-icon {
-    width: 52px; height: 52px; border-radius: var(--radius);
-    background: var(--blue-light); border: 1px solid #C7D8FC;
-    display: flex; align-items: center; justify-content: center;
-    margin: 0 auto 14px;
-  }
-  .drop-icon svg { width: 24px; height: 24px; color: var(--blue); }
-  .drop-zone h3 { font-size: 16px; font-weight: 600; margin-bottom: 5px; }
-  .drop-zone p { font-size: 14px; color: var(--gray-500); }
-  .drop-zone p a { color: var(--blue); cursor: pointer; text-decoration: none; }
-  .drop-zone p a:hover { text-decoration: underline; }
-  .drop-hint { font-size: 12px; color: var(--gray-400); margin-top: 8px; }
+      /* Drop zone */
+      .drop-zone {
+        border: 2px dashed var(--gray-300);
+        border-radius: var(--radius-lg);
+        padding: 3rem 2rem;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        background: #fff;
+        position: relative;
+      }
+      .drop-zone:hover,
+      .drop-zone.dragover {
+        border-color: var(--blue);
+        background: var(--blue-light);
+      }
+      .drop-zone input[type="file"] {
+        display: none;
+      }
+      .drop-icon {
+        width: 52px;
+        height: 52px;
+        border-radius: var(--radius);
+        background: var(--blue-light);
+        border: 1px solid #c7d8fc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 14px;
+      }
+      .drop-icon svg {
+        width: 24px;
+        height: 24px;
+        color: var(--blue);
+      }
+      .drop-zone h3 {
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 5px;
+      }
+      .drop-zone p {
+        font-size: 14px;
+        color: var(--gray-500);
+      }
+      .drop-zone p a {
+        color: var(--blue);
+        cursor: pointer;
+        text-decoration: none;
+      }
+      .drop-zone p a:hover {
+        text-decoration: underline;
+      }
+      .drop-hint {
+        font-size: 12px;
+        color: var(--gray-400);
+        margin-top: 8px;
+      }
 
-  /* File list */
-  .file-list { margin-top: 1rem; display: flex; flex-direction: column; gap: 8px; }
-  .file-item {
-    background: #fff;
-    border: 1px solid var(--gray-200);
-    border-radius: var(--radius);
-    padding: 12px 14px;
-    display: flex; align-items: center; gap: 12px;
-    box-shadow: var(--shadow);
-    transition: border-color 0.2s;
-  }
-  .file-item.done { border-color: #A7F3D0; background: var(--green-light); }
-  .file-item.error { border-color: #FCA5A5; background: var(--red-light); }
-  .file-item.converting { border-color: #FDE68A; background: var(--amber-light); }
+      /* File list */
+      .file-list {
+        margin-top: 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .file-item {
+        background: #fff;
+        border: 1px solid var(--gray-200);
+        border-radius: var(--radius);
+        padding: 12px 14px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        box-shadow: var(--shadow);
+        transition: border-color 0.2s;
+      }
+      .file-item.done {
+        border-color: #a7f3d0;
+        background: var(--green-light);
+      }
+      .file-item.error {
+        border-color: #fca5a5;
+        background: var(--red-light);
+      }
+      .file-item.converting {
+        border-color: #fde68a;
+        background: var(--amber-light);
+      }
 
-  .file-icon {
-    width: 36px; height: 36px; border-radius: 7px;
-    background: #2B5CE6; display: flex; align-items: center;
-    justify-content: center; flex-shrink: 0;
-  }
-  .file-icon svg { width: 18px; height: 18px; color: #fff; }
-  .file-meta { flex: 1; min-width: 0; }
-  .file-name { font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .file-size { font-size: 12px; color: var(--gray-500); margin-top: 1px; }
+      .file-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 7px;
+        background: #2b5ce6;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .file-icon svg {
+        width: 18px;
+        height: 18px;
+        color: #fff;
+      }
+      .file-meta {
+        flex: 1;
+        min-width: 0;
+      }
+      .file-name {
+        font-size: 14px;
+        font-weight: 500;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .file-size {
+        font-size: 12px;
+        color: var(--gray-500);
+        margin-top: 1px;
+      }
 
-  .file-progress-wrap {
-    flex: 1; height: 4px; background: var(--gray-200);
-    border-radius: 2px; overflow: hidden; display: none;
-  }
-  .file-progress-bar { height: 100%; background: var(--blue); border-radius: 2px; transition: width 0.25s; }
+      .file-progress-wrap {
+        flex: 1;
+        height: 4px;
+        background: var(--gray-200);
+        border-radius: 2px;
+        overflow: hidden;
+        display: none;
+      }
+      .file-progress-bar {
+        height: 100%;
+        background: var(--blue);
+        border-radius: 2px;
+        transition: width 0.25s;
+      }
 
-  .file-status { font-size: 12px; font-weight: 600; white-space: nowrap; }
-  .file-status.ready { color: var(--gray-500); }
-  .file-status.converting { color: var(--amber); }
-  .file-status.done { color: var(--green); }
-  .file-status.error { color: var(--red); }
+      .file-status {
+        font-size: 12px;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+      .file-status.ready {
+        color: var(--gray-500);
+      }
+      .file-status.converting {
+        color: var(--amber);
+      }
+      .file-status.done {
+        color: var(--green);
+      }
+      .file-status.error {
+        color: var(--red);
+      }
 
-  .file-download {
-    background: var(--green); color: white;
-    border: none; border-radius: var(--radius-sm);
-    padding: 5px 12px; font-size: 12px; font-weight: 600;
-    cursor: pointer; display: none; align-items: center; gap: 5px;
-    white-space: nowrap;
-  }
-  .file-download:hover { background: #0F6E56; }
-  .file-download svg { width: 13px; height: 13px; }
+      .file-download {
+        background: var(--green);
+        color: white;
+        border: none;
+        border-radius: var(--radius-sm);
+        padding: 5px 12px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        display: none;
+        align-items: center;
+        gap: 5px;
+        white-space: nowrap;
+      }
+      .file-download:hover {
+        background: #0f6e56;
+      }
+      .file-download svg {
+        width: 13px;
+        height: 13px;
+      }
 
-  .remove-btn {
-    background: none; border: none; cursor: pointer;
-    color: var(--gray-400); padding: 4px; border-radius: 4px; line-height: 1;
-  }
-  .remove-btn:hover { color: var(--gray-700); background: var(--gray-100); }
+      .remove-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--gray-400);
+        padding: 4px;
+        border-radius: 4px;
+        line-height: 1;
+      }
+      .remove-btn:hover {
+        color: var(--gray-700);
+        background: var(--gray-100);
+      }
 
-  /* Options */
-  .options-panel {
-    background: #fff; border: 1px solid var(--gray-200);
-    border-radius: var(--radius); padding: 1.25rem;
-    margin-top: 1rem; display: none;
-    box-shadow: var(--shadow);
-  }
-  .options-title { font-size: 13px; font-weight: 600; color: var(--gray-700); margin-bottom: 12px; }
-  .options-grid { display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-end; }
-  .opt-group { display: flex; flex-direction: column; gap: 5px; }
-  .opt-label { font-size: 12px; color: var(--gray-500); font-weight: 500; }
-  .opt-select {
-    font-size: 13px; padding: 7px 10px;
-    border: 1px solid var(--gray-300); border-radius: var(--radius-sm);
-    background: #fff; color: var(--gray-800);
-    cursor: pointer; min-width: 130px;
-  }
-  .opt-select:focus { outline: none; border-color: var(--blue); }
+      /* Options */
+      .options-panel {
+        background: #fff;
+        border: 1px solid var(--gray-200);
+        border-radius: var(--radius);
+        padding: 1.25rem;
+        margin-top: 1rem;
+        display: none;
+        box-shadow: var(--shadow);
+      }
+      .options-title {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--gray-700);
+        margin-bottom: 12px;
+      }
+      .options-grid {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        align-items: flex-end;
+      }
+      .opt-group {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+      .opt-label {
+        font-size: 12px;
+        color: var(--gray-500);
+        font-weight: 500;
+      }
+      .opt-select {
+        font-size: 13px;
+        padding: 7px 10px;
+        border: 1px solid var(--gray-300);
+        border-radius: var(--radius-sm);
+        background: #fff;
+        color: var(--gray-800);
+        cursor: pointer;
+        min-width: 130px;
+      }
+      .opt-select:focus {
+        outline: none;
+        border-color: var(--blue);
+      }
 
-  .toggle-row { display: flex; align-items: center; gap: 8px; }
-  .toggle {
-    width: 36px; height: 20px; border-radius: 10px;
-    background: var(--gray-300); cursor: pointer;
-    position: relative; transition: background 0.2s; flex-shrink: 0; border: none;
-  }
-  .toggle.on { background: var(--blue); }
-  .toggle::after {
-    content: ''; position: absolute; top: 3px; left: 3px;
-    width: 14px; height: 14px; border-radius: 50%; background: white;
-    transition: transform 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,.2);
-  }
-  .toggle.on::after { transform: translateX(16px); }
-  .toggle-label { font-size: 13px; color: var(--gray-600); }
+      .toggle-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .toggle {
+        width: 36px;
+        height: 20px;
+        border-radius: 10px;
+        background: var(--gray-300);
+        cursor: pointer;
+        position: relative;
+        transition: background 0.2s;
+        flex-shrink: 0;
+        border: none;
+      }
+      .toggle.on {
+        background: var(--blue);
+      }
+      .toggle::after {
+        content: "";
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: white;
+        transition: transform 0.2s;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+      }
+      .toggle.on::after {
+        transform: translateX(16px);
+      }
+      .toggle-label {
+        font-size: 13px;
+        color: var(--gray-600);
+      }
 
-  /* Action bar */
-  .action-bar {
-    display: none; align-items: center; gap: 10px;
-    margin-top: 1.25rem; flex-wrap: wrap;
-  }
-  .btn-primary {
-    background: var(--blue); color: white;
-    border: none; border-radius: var(--radius);
-    padding: 11px 28px; font-size: 14px; font-weight: 600;
-    cursor: pointer; display: flex; align-items: center; gap: 8px;
-    transition: background 0.15s, transform 0.1s;
-  }
-  .btn-primary:hover { background: var(--blue-dark); }
-  .btn-primary:active { transform: scale(0.98); }
-  .btn-primary:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
-  .btn-primary svg { width: 16px; height: 16px; }
+      /* Action bar */
+      .action-bar {
+        display: none;
+        align-items: center;
+        gap: 10px;
+        margin-top: 1.25rem;
+        flex-wrap: wrap;
+      }
+      .btn-primary {
+        background: var(--blue);
+        color: white;
+        border: none;
+        border-radius: var(--radius);
+        padding: 11px 28px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition:
+          background 0.15s,
+          transform 0.1s;
+      }
+      .btn-primary:hover {
+        background: var(--blue-dark);
+      }
+      .btn-primary:active {
+        transform: scale(0.98);
+      }
+      .btn-primary:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+        transform: none;
+      }
+      .btn-primary svg {
+        width: 16px;
+        height: 16px;
+      }
 
-  .btn-secondary {
-    background: none; border: 1px solid var(--gray-300);
-    border-radius: var(--radius); padding: 11px 20px;
-    font-size: 14px; color: var(--gray-600); cursor: pointer;
-    transition: background 0.15s;
-  }
-  .btn-secondary:hover { background: var(--gray-100); }
+      .btn-secondary {
+        background: none;
+        border: 1px solid var(--gray-300);
+        border-radius: var(--radius);
+        padding: 11px 20px;
+        font-size: 14px;
+        color: var(--gray-600);
+        cursor: pointer;
+        transition: background 0.15s;
+      }
+      .btn-secondary:hover {
+        background: var(--gray-100);
+      }
 
-  .btn-dl-all {
-    background: var(--green); color: white;
-    border: none; border-radius: var(--radius);
-    padding: 11px 22px; font-size: 14px; font-weight: 600;
-    cursor: pointer; display: none; align-items: center; gap: 8px;
-    transition: background 0.15s;
-  }
-  .btn-dl-all:hover { background: #0F6E56; }
-  .btn-dl-all svg { width: 16px; height: 16px; }
+      .btn-dl-all {
+        background: var(--green);
+        color: white;
+        border: none;
+        border-radius: var(--radius);
+        padding: 11px 22px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        display: none;
+        align-items: center;
+        gap: 8px;
+        transition: background 0.15s;
+      }
+      .btn-dl-all:hover {
+        background: #0f6e56;
+      }
+      .btn-dl-all svg {
+        width: 16px;
+        height: 16px;
+      }
 
-  /* Progress */
-  .global-progress {
-    display: none; background: #fff; border: 1px solid var(--gray-200);
-    border-radius: var(--radius); padding: 14px 16px; margin-top: 1rem;
-    box-shadow: var(--shadow);
-  }
-  .gp-label { font-size: 13px; color: var(--gray-600); margin-bottom: 8px; }
-  .gp-bar-wrap { height: 6px; background: var(--gray-100); border-radius: 3px; overflow: hidden; }
-  .gp-bar { height: 100%; background: var(--blue); border-radius: 3px; transition: width 0.3s; }
+      /* Progress */
+      .global-progress {
+        display: none;
+        background: #fff;
+        border: 1px solid var(--gray-200);
+        border-radius: var(--radius);
+        padding: 14px 16px;
+        margin-top: 1rem;
+        box-shadow: var(--shadow);
+      }
+      .gp-label {
+        font-size: 13px;
+        color: var(--gray-600);
+        margin-bottom: 8px;
+      }
+      .gp-bar-wrap {
+        height: 6px;
+        background: var(--gray-100);
+        border-radius: 3px;
+        overflow: hidden;
+      }
+      .gp-bar {
+        height: 100%;
+        background: var(--blue);
+        border-radius: 3px;
+        transition: width 0.3s;
+      }
 
-  /* Trust row */
-  .trust-row {
-    display: flex; gap: 20px; flex-wrap: wrap;
-    margin-top: 2rem; padding-top: 1.75rem;
-    border-top: 1px solid var(--gray-200);
-  }
-  .trust-item { display: flex; align-items: flex-start; gap: 10px; flex: 1; min-width: 160px; }
-  .trust-icon {
-    width: 32px; height: 32px; border-radius: var(--radius-sm);
-    background: var(--blue-light); flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .trust-icon svg { width: 15px; height: 15px; color: var(--blue); }
-  .trust-text strong { font-size: 13px; font-weight: 600; display: block; color: var(--gray-800); }
-  .trust-text span { font-size: 12px; color: var(--gray-500); line-height: 1.5; }
+      /* Trust row */
+      .trust-row {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        margin-top: 2rem;
+        padding-top: 1.75rem;
+        border-top: 1px solid var(--gray-200);
+      }
+      .trust-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        flex: 1;
+        min-width: 160px;
+      }
+      .trust-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: var(--radius-sm);
+        background: var(--blue-light);
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .trust-icon svg {
+        width: 15px;
+        height: 15px;
+        color: var(--blue);
+      }
+      .trust-text strong {
+        font-size: 13px;
+        font-weight: 600;
+        display: block;
+        color: var(--gray-800);
+      }
+      .trust-text span {
+        font-size: 12px;
+        color: var(--gray-500);
+        line-height: 1.5;
+      }
 
-  /* Error note */
-  .note {
-    font-size: 12px; color: var(--gray-500);
-    margin-top: 8px; padding: 8px 12px;
-    background: var(--amber-light); border-radius: var(--radius-sm);
-    border: 1px solid #FDE68A; display: none;
-  }
+      /* Error note */
+      .note {
+        font-size: 12px;
+        color: var(--gray-500);
+        margin-top: 8px;
+        padding: 8px 12px;
+        background: var(--amber-light);
+        border-radius: var(--radius-sm);
+        border: 1px solid #fde68a;
+        display: none;
+      }
 
-  @media (max-width: 540px) {
-    .main { padding: 0 1rem 3rem; }
-    .topbar { padding: 0 1rem; }
-    .hero { padding: 1.5rem 1rem; }
-    .hero h1 { font-size: 22px; }
-  }
-</style>
-</head>
-<body>
-
-<div class="topbar">
-  <div class="logo">Pranika<span>Tools</span></div>
-  <a href="#" class="back-link">
-    <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-      <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
-    </svg>
-    All Tools
-  </a>
-</div>
-
-<div class="hero">
-  <div class="hero-inner">
-    <div class="tool-label">Document Conversion</div>
-    <h1>Word to PDF</h1>
-    <p>Convert .doc and .docx files to PDF without losing any formatting. Tables, fonts, images — everything stays exactly as designed. Perfect for resumes, reports, and official documents.</p>
-    <div class="badges">
-      <span class="badge">Formatting Preserved</span>
-      <span class="badge">Batch Convert</span>
-      <span class="badge">.doc + .docx</span>
-      <span class="badge">Free</span>
+      @media (max-width: 540px) {
+        .main {
+          padding: 0 1rem 3rem;
+        }
+        .topbar {
+          padding: 0 1rem;
+        }
+        .hero {
+          padding: 1.5rem 1rem;
+        }
+        .hero h1 {
+          font-size: 22px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="topbar">
+      <div class="logo">Pranika<span>Tools</span></div>
+      <a href="./index.html" class="back-link">
+        <svg
+          width="14"
+          height="14"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M15 19l-7-7 7-7"
+          />
+        </svg>
+        All Tools
+      </a>
     </div>
-  </div>
-</div>
 
-<div class="main">
-
-  <!-- Drop Zone -->
-  <div class="drop-zone" id="dropZone">
-    <input type="file" id="fileInput" multiple accept=".doc,.docx">
-    <div class="drop-icon">
-      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414A1 1 0 0119 9.414V19a2 2 0 01-2 2z"/>
-      </svg>
-    </div>
-    <h3>Drop your Word files here</h3>
-    <p>or <a id="browseLink">browse to upload</a></p>
-    <div class="drop-hint">Supports .doc and .docx · Up to 50MB per file</div>
-  </div>
-
-  <!-- File List -->
-  <div class="file-list" id="fileList"></div>
-
-  <!-- Options -->
-  <div class="options-panel" id="optionsPanel">
-    <div class="options-title">Conversion Options</div>
-    <div class="options-grid">
-      <div class="opt-group">
-        <div class="opt-label">Page Size</div>
-        <select class="opt-select" id="optPageSize">
-          <option value="a4">A4 (210×297mm)</option>
-          <option value="letter">Letter (8.5×11in)</option>
-          <option value="legal">Legal (8.5×14in)</option>
-        </select>
-      </div>
-      <div class="opt-group">
-        <div class="opt-label">Orientation</div>
-        <select class="opt-select" id="optOrientation">
-          <option value="portrait">Portrait</option>
-          <option value="landscape">Landscape</option>
-        </select>
-      </div>
-      <div class="opt-group" style="margin-left:auto;justify-content:flex-end;">
-        <div class="toggle-row">
-          <button class="toggle on" id="toggleMargins" onclick="this.classList.toggle('on')"></button>
-          <span class="toggle-label">Standard margins</span>
+    <div class="hero">
+      <div class="hero-inner">
+        <div class="tool-label">Document Conversion</div>
+        <h1>Word to PDF</h1>
+        <p>
+          Convert .doc and .docx files to PDF without losing any formatting.
+          Tables, fonts, images — everything stays exactly as designed. Perfect
+          for resumes, reports, and official documents.
+        </p>
+        <div class="badges">
+          <span class="badge">Formatting Preserved</span>
+          <span class="badge">Batch Convert</span>
+          <span class="badge">.doc + .docx</span>
+          <span class="badge">Free</span>
         </div>
-        <div class="toggle-row" style="margin-top:8px;">
-          <button class="toggle on" id="toggleLinks" onclick="this.classList.toggle('on')"></button>
-          <span class="toggle-label">Preserve hyperlinks</span>
+      </div>
+    </div>
+
+    <div class="main">
+      <!-- Drop Zone -->
+      <div class="drop-zone" id="dropZone">
+        <input type="file" id="fileInput" multiple accept=".doc,.docx" />
+        <div class="drop-icon">
+          <svg
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="1.8"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414A1 1 0 0119 9.414V19a2 2 0 01-2 2z"
+            />
+          </svg>
+        </div>
+        <h3>Drop your Word files here</h3>
+        <p>or <a id="browseLink">browse to upload</a></p>
+        <div class="drop-hint">
+          Supports .doc and .docx · Up to 50MB per file
+        </div>
+      </div>
+
+      <!-- File List -->
+      <div class="file-list" id="fileList"></div>
+
+      <!-- Options -->
+      <div class="options-panel" id="optionsPanel">
+        <div class="options-title">Conversion Options</div>
+        <div class="options-grid">
+          <div class="opt-group">
+            <div class="opt-label">Page Size</div>
+            <select class="opt-select" id="optPageSize">
+              <option value="a4">A4 (210×297mm)</option>
+              <option value="letter">Letter (8.5×11in)</option>
+              <option value="legal">Legal (8.5×14in)</option>
+            </select>
+          </div>
+          <div class="opt-group">
+            <div class="opt-label">Orientation</div>
+            <select class="opt-select" id="optOrientation">
+              <option value="portrait">Portrait</option>
+              <option value="landscape">Landscape</option>
+            </select>
+          </div>
+          <div
+            class="opt-group"
+            style="margin-left: auto; justify-content: flex-end"
+          >
+            <div class="toggle-row">
+              <button
+                class="toggle on"
+                id="toggleMargins"
+                onclick="this.classList.toggle('on')"
+              ></button>
+              <span class="toggle-label">Standard margins</span>
+            </div>
+            <div class="toggle-row" style="margin-top: 8px">
+              <button
+                class="toggle on"
+                id="toggleLinks"
+                onclick="this.classList.toggle('on')"
+              ></button>
+              <span class="toggle-label">Preserve hyperlinks</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Note for .doc files -->
+      <div class="note" id="docNote">
+        ⚠ Note: Legacy .doc files are supported but may have minor formatting
+        differences compared to .docx files.
+      </div>
+
+      <!-- Action Bar -->
+      <div class="action-bar" id="actionBar">
+        <button class="btn-primary" id="convertBtn" onclick="convertAll()">
+          <svg
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
+            />
+          </svg>
+          Convert to PDF
+        </button>
+        <button class="btn-dl-all" id="dlAllBtn" onclick="downloadAll()">
+          <svg
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+            />
+          </svg>
+          Download All PDFs
+        </button>
+        <button class="btn-secondary" onclick="clearAll()">Clear All</button>
+      </div>
+
+      <!-- Global Progress -->
+      <div class="global-progress" id="globalProgress">
+        <div class="gp-label" id="gpLabel">Converting files…</div>
+        <div class="gp-bar-wrap">
+          <div class="gp-bar" id="gpBar" style="width: 0%"></div>
+        </div>
+      </div>
+
+      <!-- Trust row -->
+      <div class="trust-row">
+        <div class="trust-item">
+          <div class="trust-icon">
+            <svg
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+              />
+            </svg>
+          </div>
+          <div class="trust-text">
+            <strong>Private & Secure</strong>
+            <span
+              >Files are processed in your browser and never uploaded to any
+              server.</span
+            >
+          </div>
+        </div>
+        <div class="trust-item">
+          <div class="trust-icon">
+            <svg
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M13 10V3L4 14h7v7l9-11h-7z"
+              />
+            </svg>
+          </div>
+          <div class="trust-text">
+            <strong>Fast Conversion</strong>
+            <span>Convert multiple files in seconds with no quality loss.</span>
+          </div>
+        </div>
+        <div class="trust-item">
+          <div class="trust-icon">
+            <svg
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+          </div>
+          <div class="trust-text">
+            <strong>Exact Formatting</strong>
+            <span
+              >Tables, fonts, headings and images render accurately in every
+              PDF.</span
+            >
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- Note for .doc files -->
-  <div class="note" id="docNote">
-    ⚠ Note: Legacy .doc files are supported but may have minor formatting differences compared to .docx files.
-  </div>
+    <!-- Load libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
-  <!-- Action Bar -->
-  <div class="action-bar" id="actionBar">
-    <button class="btn-primary" id="convertBtn" onclick="convertAll()">
-      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
-      </svg>
-      Convert to PDF
-    </button>
-    <button class="btn-dl-all" id="dlAllBtn" onclick="downloadAll()">
-      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-      </svg>
-      Download All PDFs
-    </button>
-    <button class="btn-secondary" onclick="clearAll()">Clear All</button>
-  </div>
+    <script>
+      const { jsPDF } = window.jspdf;
 
-  <!-- Global Progress -->
-  <div class="global-progress" id="globalProgress">
-    <div class="gp-label" id="gpLabel">Converting files…</div>
-    <div class="gp-bar-wrap"><div class="gp-bar" id="gpBar" style="width:0%"></div></div>
-  </div>
+      const fileData = []; // { file, name, size, state, pdfBlob }
 
-  <!-- Trust row -->
-  <div class="trust-row">
-    <div class="trust-item">
-      <div class="trust-icon">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-        </svg>
-      </div>
-      <div class="trust-text">
-        <strong>Private & Secure</strong>
-        <span>Files are processed in your browser and never uploaded to any server.</span>
-      </div>
-    </div>
-    <div class="trust-item">
-      <div class="trust-icon">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-        </svg>
-      </div>
-      <div class="trust-text">
-        <strong>Fast Conversion</strong>
-        <span>Convert multiple files in seconds with no quality loss.</span>
-      </div>
-    </div>
-    <div class="trust-item">
-      <div class="trust-icon">
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-        </svg>
-      </div>
-      <div class="trust-text">
-        <strong>Exact Formatting</strong>
-        <span>Tables, fonts, headings and images render accurately in every PDF.</span>
-      </div>
-    </div>
-  </div>
+      function formatSize(bytes) {
+        if (bytes < 1024) return bytes + " B";
+        if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
+        return (bytes / (1024 * 1024)).toFixed(1) + " MB";
+      }
 
-</div>
-
-<!-- Load libraries -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-
-<script>
-const { jsPDF } = window.jspdf;
-
-const fileData = []; // { file, name, size, state, pdfBlob }
-
-function formatSize(bytes) {
-  if (bytes < 1024) return bytes + ' B';
-  if (bytes < 1024*1024) return (bytes/1024).toFixed(1) + ' KB';
-  return (bytes/(1024*1024)).toFixed(1) + ' MB';
-}
-
-function renderList() {
-  const list = document.getElementById('fileList');
-  list.innerHTML = '';
-  fileData.forEach((f, i) => {
-    const item = document.createElement('div');
-    item.className = 'file-item' + (f.state === 'done' ? ' done' : f.state === 'error' ? ' error' : f.state === 'converting' ? ' converting' : '');
-    item.id = 'item-' + i;
-    item.innerHTML = `
+      function renderList() {
+        const list = document.getElementById("fileList");
+        list.innerHTML = "";
+        fileData.forEach((f, i) => {
+          const item = document.createElement("div");
+          item.className =
+            "file-item" +
+            (f.state === "done"
+              ? " done"
+              : f.state === "error"
+                ? " error"
+                : f.state === "converting"
+                  ? " converting"
+                  : "");
+          item.id = "item-" + i;
+          item.innerHTML = `
       <div class="file-icon">
         <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
           <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414A1 1 0 0119 9.414V19a2 2 0 01-2 2z"/>
@@ -456,12 +862,17 @@ function renderList() {
         <div class="file-progress-bar" id="progbar-${i}" style="width:0%"></div>
       </div>
       <span class="file-status ${f.state}" id="status-${i}">${
-        f.state === 'ready' ? 'Ready' :
-        f.state === 'converting' ? 'Converting…' :
-        f.state === 'done' ? 'Done' :
-        f.state === 'error' ? 'Failed' : ''
+        f.state === "ready"
+          ? "Ready"
+          : f.state === "converting"
+            ? "Converting…"
+            : f.state === "done"
+              ? "Done"
+              : f.state === "error"
+                ? "Failed"
+                : ""
       }</span>
-      <button class="file-download" id="dl-${i}" onclick="downloadSingle(${i})" style="display:${f.state==='done'?'flex':'none'}">
+      <button class="file-download" id="dl-${i}" onclick="downloadSingle(${i})" style="display:${f.state === "done" ? "flex" : "none"}">
         <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
           <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
         </svg>
@@ -473,113 +884,149 @@ function renderList() {
         </svg>
       </button>
     `;
-    list.appendChild(item);
-  });
+          list.appendChild(item);
+        });
 
-  const hasFiles = fileData.length > 0;
-  document.getElementById('optionsPanel').style.display = hasFiles ? 'block' : 'none';
-  document.getElementById('actionBar').style.display = hasFiles ? 'flex' : 'none';
-  const hasDoc = fileData.some(f => f.name.endsWith('.doc'));
-  document.getElementById('docNote').style.display = hasDoc ? 'block' : 'none';
-  const allDone = fileData.length > 0 && fileData.every(f => f.state === 'done');
-  const dlAll = document.getElementById('dlAllBtn');
-  dlAll.style.display = allDone ? 'flex' : 'none';
-}
+        const hasFiles = fileData.length > 0;
+        document.getElementById("optionsPanel").style.display = hasFiles
+          ? "block"
+          : "none";
+        document.getElementById("actionBar").style.display = hasFiles
+          ? "flex"
+          : "none";
+        const hasDoc = fileData.some((f) => f.name.endsWith(".doc"));
+        document.getElementById("docNote").style.display = hasDoc
+          ? "block"
+          : "none";
+        const allDone =
+          fileData.length > 0 && fileData.every((f) => f.state === "done");
+        const dlAll = document.getElementById("dlAllBtn");
+        dlAll.style.display = allDone ? "flex" : "none";
+      }
 
-function removeFile(i) {
-  fileData.splice(i, 1);
-  renderList();
-}
+      function removeFile(i) {
+        fileData.splice(i, 1);
+        renderList();
+      }
 
-function clearAll() {
-  fileData.length = 0;
-  document.getElementById('fileInput').value = '';
-  document.getElementById('globalProgress').style.display = 'none';
-  renderList();
-}
+      function clearAll() {
+        fileData.length = 0;
+        document.getElementById("fileInput").value = "";
+        document.getElementById("globalProgress").style.display = "none";
+        renderList();
+      }
 
-function addFiles(files) {
-  Array.from(files).forEach(f => {
-    if (!fileData.find(x => x.name === f.name && x.size === f.size)) {
-      fileData.push({ file: f, name: f.name, size: f.size, state: 'ready', pdfBlob: null });
-    }
-  });
-  renderList();
-}
-
-// File input
-document.getElementById('browseLink').addEventListener('click', () => document.getElementById('fileInput').click());
-document.getElementById('dropZone').addEventListener('click', e => {
-  if (e.target.id !== 'browseLink') document.getElementById('fileInput').click();
-});
-document.getElementById('fileInput').addEventListener('change', e => { addFiles(e.target.files); e.target.value=''; });
-
-// Drag and drop
-const dz = document.getElementById('dropZone');
-dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('dragover'); });
-dz.addEventListener('dragleave', () => dz.classList.remove('dragover'));
-dz.addEventListener('drop', e => { e.preventDefault(); dz.classList.remove('dragover'); addFiles(e.dataTransfer.files); });
-
-// ─────────────────────────────────────────────
-// CONVERSION ENGINE
-// ─────────────────────────────────────────────
-
-function getPageDimensions() {
-  const size = document.getElementById('optPageSize').value;
-  const orient = document.getElementById('optOrientation').value;
-  // jsPDF uses [width, height] in mm
-  const dims = { a4: [210,297], letter: [215.9,279.4], legal: [215.9,355.6] };
-  let [w, h] = dims[size];
-  if (orient === 'landscape') [w, h] = [h, w];
-  return { w, h, size, orient };
-}
-
-async function convertFile(entry) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = async (e) => {
-      try {
-        const arrayBuffer = e.target.result;
-
-        // 1. Use mammoth to convert docx → HTML
-        const result = await mammoth.convertToHtml(
-          { arrayBuffer },
-          {
-            styleMap: [
-              "p[style-name='Title'] => h1.doc-title",
-              "p[style-name='Heading 1'] => h1",
-              "p[style-name='Heading 2'] => h2",
-              "p[style-name='Heading 3'] => h3",
-              "p[style-name='Heading 4'] => h4",
-              "b => strong",
-              "i => em",
-              "u => u"
-            ],
-            includeDefaultStyleMap: true,
-            convertImage: mammoth.images.imgElement(img => {
-              return img.read('base64').then(imageBase64 => ({
-                src: 'data:' + img.contentType + ';base64,' + imageBase64
-              }));
-            })
+      function addFiles(files) {
+        Array.from(files).forEach((f) => {
+          if (!fileData.find((x) => x.name === f.name && x.size === f.size)) {
+            fileData.push({
+              file: f,
+              name: f.name,
+              size: f.size,
+              state: "ready",
+              pdfBlob: null,
+            });
           }
+        });
+        renderList();
+      }
+
+      // File input
+      document
+        .getElementById("browseLink")
+        .addEventListener("click", () =>
+          document.getElementById("fileInput").click(),
         );
+      document.getElementById("dropZone").addEventListener("click", (e) => {
+        if (e.target.id !== "browseLink")
+          document.getElementById("fileInput").click();
+      });
+      document.getElementById("fileInput").addEventListener("change", (e) => {
+        addFiles(e.target.files);
+        e.target.value = "";
+      });
 
-        const html = result.value;
+      // Drag and drop
+      const dz = document.getElementById("dropZone");
+      dz.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        dz.classList.add("dragover");
+      });
+      dz.addEventListener("dragleave", () => dz.classList.remove("dragover"));
+      dz.addEventListener("drop", (e) => {
+        e.preventDefault();
+        dz.classList.remove("dragover");
+        addFiles(e.dataTransfer.files);
+      });
 
-        // 2. Render into a hidden iframe for accurate layout
-        const { w, h } = getPageDimensions();
-        const dpi = 96;
-        const pxW = Math.round(w / 25.4 * dpi);
-        const pxH = Math.round(h / 25.4 * dpi);
-        const margin = document.getElementById('toggleMargins').classList.contains('on') ? 50 : 20;
+      // ─────────────────────────────────────────────
+      // CONVERSION ENGINE
+      // ─────────────────────────────────────────────
 
-        const iframe = document.createElement('iframe');
-        iframe.style.cssText = `position:fixed;left:-9999px;top:0;width:${pxW}px;border:none;visibility:hidden;`;
-        document.body.appendChild(iframe);
+      function getPageDimensions() {
+        const size = document.getElementById("optPageSize").value;
+        const orient = document.getElementById("optOrientation").value;
+        // jsPDF uses [width, height] in mm
+        const dims = {
+          a4: [210, 297],
+          letter: [215.9, 279.4],
+          legal: [215.9, 355.6],
+        };
+        let [w, h] = dims[size];
+        if (orient === "landscape") [w, h] = [h, w];
+        return { w, h, size, orient };
+      }
 
-        const iDoc = iframe.contentDocument;
-        iDoc.open();
-        iDoc.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
+      async function convertFile(entry) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = async (e) => {
+            try {
+              const arrayBuffer = e.target.result;
+
+              // 1. Use mammoth to convert docx → HTML
+              const result = await mammoth.convertToHtml(
+                { arrayBuffer },
+                {
+                  styleMap: [
+                    "p[style-name='Title'] => h1.doc-title",
+                    "p[style-name='Heading 1'] => h1",
+                    "p[style-name='Heading 2'] => h2",
+                    "p[style-name='Heading 3'] => h3",
+                    "p[style-name='Heading 4'] => h4",
+                    "b => strong",
+                    "i => em",
+                    "u => u",
+                  ],
+                  includeDefaultStyleMap: true,
+                  convertImage: mammoth.images.imgElement((img) => {
+                    return img.read("base64").then((imageBase64) => ({
+                      src: "data:" + img.contentType + ";base64," + imageBase64,
+                    }));
+                  }),
+                },
+              );
+
+              const html = result.value;
+
+              // 2. Render into a hidden iframe for accurate layout
+              const { w, h } = getPageDimensions();
+              const dpi = 96;
+              const pxW = Math.round((w / 25.4) * dpi);
+              const pxH = Math.round((h / 25.4) * dpi);
+              const margin = document
+                .getElementById("toggleMargins")
+                .classList.contains("on")
+                ? 50
+                : 20;
+
+              const iframe = document.createElement("iframe");
+              iframe.style.cssText = `position:fixed;left:-9999px;top:0;width:${pxW}px;border:none;visibility:hidden;`;
+              document.body.appendChild(iframe);
+
+              const iDoc = iframe.contentDocument;
+              iDoc.open();
+              iDoc.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
           *, *::before, *::after { box-sizing: border-box; }
           html, body { margin: 0; padding: 0; width: ${pxW}px; background: white; }
           body { font-family: 'Segoe UI', Arial, sans-serif; font-size: 13px; line-height: 1.6; color: #111; padding: ${margin}px; }
@@ -602,145 +1049,150 @@ async function convertFile(entry) {
           pre, code { font-family: monospace; background: #f5f5f5; padding: 2px 4px; border-radius: 3px; font-size: 11px; }
           blockquote { margin: 8px 0 8px 16px; padding-left: 10px; border-left: 3px solid #ccc; color: #555; }
         </style></head><body>${html}</body></html>`);
-        iDoc.close();
+              iDoc.close();
 
-        // Wait for images to load
-        await new Promise(r => setTimeout(r, 400));
-        const bodyHeight = iDoc.body.scrollHeight;
-        iframe.style.height = bodyHeight + 'px';
-        await new Promise(r => setTimeout(r, 200));
+              // Wait for images to load
+              await new Promise((r) => setTimeout(r, 400));
+              const bodyHeight = iDoc.body.scrollHeight;
+              iframe.style.height = bodyHeight + "px";
+              await new Promise((r) => setTimeout(r, 200));
 
-        // 3. Paginate and render with html2canvas
-        const pageHeightPx = pxH;
-        const totalPages = Math.max(1, Math.ceil(bodyHeight / pageHeightPx));
+              // 3. Paginate and render with html2canvas
+              const pageHeightPx = pxH;
+              const totalPages = Math.max(
+                1,
+                Math.ceil(bodyHeight / pageHeightPx),
+              );
 
-        const { size, orient } = getPageDimensions();
-        const pdf = new jsPDF({
-          orientation: orient === 'landscape' ? 'l' : 'p',
-          unit: 'mm',
-          format: size === 'a4' ? 'a4' : size === 'letter' ? 'letter' : 'legal'
+              const { size, orient } = getPageDimensions();
+              const pdf = new jsPDF({
+                orientation: orient === "landscape" ? "l" : "p",
+                unit: "mm",
+                format:
+                  size === "a4" ? "a4" : size === "letter" ? "letter" : "legal",
+              });
+
+              for (let page = 0; page < totalPages; page++) {
+                const clipY = page * pageHeightPx;
+                const clipH = Math.min(pageHeightPx, bodyHeight - clipY);
+
+                const canvas = await html2canvas(iDoc.body, {
+                  useCORS: true,
+                  allowTaint: true,
+                  scale: 2,
+                  width: pxW,
+                  height: clipH,
+                  windowWidth: pxW,
+                  windowHeight: bodyHeight,
+                  scrollY: -clipY,
+                  backgroundColor: "#ffffff",
+                  logging: false,
+                });
+
+                const imgData = canvas.toDataURL("image/jpeg", 0.92);
+                const mmPerPx = w / pxW;
+                const imgH = clipH * mmPerPx;
+
+                if (page > 0) pdf.addPage();
+                pdf.addImage(imgData, "JPEG", 0, 0, w, Math.min(imgH, h));
+              }
+
+              document.body.removeChild(iframe);
+              const pdfBlob = pdf.output("blob");
+              resolve(pdfBlob);
+            } catch (err) {
+              console.error("Conversion error:", err);
+              reject(err);
+            }
+          };
+          reader.onerror = reject;
+          reader.readAsArrayBuffer(entry.file);
         });
+      }
 
-        for (let page = 0; page < totalPages; page++) {
-          const clipY = page * pageHeightPx;
-          const clipH = Math.min(pageHeightPx, bodyHeight - clipY);
+      async function convertAll() {
+        const pending = fileData.filter(
+          (f) => f.state === "ready" || f.state === "error",
+        );
+        if (!pending.length) return;
 
-          const canvas = await html2canvas(iDoc.body, {
-            useCORS: true,
-            allowTaint: true,
-            scale: 2,
-            width: pxW,
-            height: clipH,
-            windowWidth: pxW,
-            windowHeight: bodyHeight,
-            scrollY: -clipY,
-            backgroundColor: '#ffffff',
-            logging: false
-          });
+        const btn = document.getElementById("convertBtn");
+        btn.disabled = true;
+        btn.textContent = "Converting…";
 
-          const imgData = canvas.toDataURL('image/jpeg', 0.92);
-          const mmPerPx = w / pxW;
-          const imgH = clipH * mmPerPx;
+        const gp = document.getElementById("globalProgress");
+        const gpBar = document.getElementById("gpBar");
+        const gpLabel = document.getElementById("gpLabel");
+        gp.style.display = "block";
 
-          if (page > 0) pdf.addPage();
-          pdf.addImage(imgData, 'JPEG', 0, 0, w, Math.min(imgH, h));
+        let done = 0;
+        for (let i = 0; i < fileData.length; i++) {
+          const f = fileData[i];
+          if (f.state !== "ready" && f.state !== "error") continue;
+
+          f.state = "converting";
+          renderList();
+
+          // Show per-file progress animation
+          const progWrap = document.getElementById("prog-" + i);
+          const progBar = document.getElementById("progbar-" + i);
+          if (progWrap) progWrap.style.display = "block";
+          let fakeP = 0;
+          const fakeInterval = setInterval(() => {
+            fakeP = Math.min(fakeP + Math.random() * 15, 85);
+            if (progBar) progBar.style.width = fakeP + "%";
+          }, 200);
+
+          try {
+            const blob = await convertFile(f);
+            clearInterval(fakeInterval);
+            if (progBar) progBar.style.width = "100%";
+            await new Promise((r) => setTimeout(r, 150));
+            if (progWrap) progWrap.style.display = "none";
+
+            f.pdfBlob = blob;
+            f.state = "done";
+          } catch (err) {
+            clearInterval(fakeInterval);
+            if (progWrap) progWrap.style.display = "none";
+            f.state = "error";
+            console.error("Failed:", f.name, err);
+          }
+
+          done++;
+          gpBar.style.width = Math.round((done / pending.length) * 100) + "%";
+          gpLabel.textContent = `Converting… ${done} of ${pending.length} files`;
+          renderList();
         }
 
-        document.body.removeChild(iframe);
-        const pdfBlob = pdf.output('blob');
-        resolve(pdfBlob);
+        gpLabel.textContent = `Done! ${done} file${done > 1 ? "s" : ""} converted.`;
+        gpBar.style.width = "100%";
 
-      } catch (err) {
-        console.error('Conversion error:', err);
-        reject(err);
+        btn.disabled = false;
+        btn.innerHTML = `<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="16" height="16"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>Convert to PDF`;
+        renderList();
       }
-    };
-    reader.onerror = reject;
-    reader.readAsArrayBuffer(entry.file);
-  });
-}
 
-async function convertAll() {
-  const pending = fileData.filter(f => f.state === 'ready' || f.state === 'error');
-  if (!pending.length) return;
+      function downloadSingle(i) {
+        const f = fileData[i];
+        if (!f || !f.pdfBlob) return;
+        const url = URL.createObjectURL(f.pdfBlob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = f.name.replace(/\.docx?$/i, "") + ".pdf";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(url), 5000);
+      }
 
-  const btn = document.getElementById('convertBtn');
-  btn.disabled = true;
-  btn.textContent = 'Converting…';
-
-  const gp = document.getElementById('globalProgress');
-  const gpBar = document.getElementById('gpBar');
-  const gpLabel = document.getElementById('gpLabel');
-  gp.style.display = 'block';
-
-  let done = 0;
-  for (let i = 0; i < fileData.length; i++) {
-    const f = fileData[i];
-    if (f.state !== 'ready' && f.state !== 'error') continue;
-
-    f.state = 'converting';
-    renderList();
-
-    // Show per-file progress animation
-    const progWrap = document.getElementById('prog-' + i);
-    const progBar = document.getElementById('progbar-' + i);
-    if (progWrap) progWrap.style.display = 'block';
-    let fakeP = 0;
-    const fakeInterval = setInterval(() => {
-      fakeP = Math.min(fakeP + Math.random() * 15, 85);
-      if (progBar) progBar.style.width = fakeP + '%';
-    }, 200);
-
-    try {
-      const blob = await convertFile(f);
-      clearInterval(fakeInterval);
-      if (progBar) progBar.style.width = '100%';
-      await new Promise(r => setTimeout(r, 150));
-      if (progWrap) progWrap.style.display = 'none';
-
-      f.pdfBlob = blob;
-      f.state = 'done';
-    } catch(err) {
-      clearInterval(fakeInterval);
-      if (progWrap) progWrap.style.display = 'none';
-      f.state = 'error';
-      console.error('Failed:', f.name, err);
-    }
-
-    done++;
-    gpBar.style.width = Math.round((done / pending.length) * 100) + '%';
-    gpLabel.textContent = `Converting… ${done} of ${pending.length} files`;
-    renderList();
-  }
-
-  gpLabel.textContent = `Done! ${done} file${done>1?'s':''} converted.`;
-  gpBar.style.width = '100%';
-
-  btn.disabled = false;
-  btn.innerHTML = `<svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" width="16" height="16"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>Convert to PDF`;
-  renderList();
-}
-
-function downloadSingle(i) {
-  const f = fileData[i];
-  if (!f || !f.pdfBlob) return;
-  const url = URL.createObjectURL(f.pdfBlob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = f.name.replace(/\.docx?$/i, '') + '.pdf';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  setTimeout(() => URL.revokeObjectURL(url), 5000);
-}
-
-function downloadAll() {
-  fileData.forEach((f, i) => {
-    if (f.state === 'done') {
-      setTimeout(() => downloadSingle(i), i * 300);
-    }
-  });
-}
-</script>
-</body>
+      function downloadAll() {
+        fileData.forEach((f, i) => {
+          if (f.state === "done") {
+            setTimeout(() => downloadSingle(i), i * 300);
+          }
+        });
+      }
+    </script>
+  </body>
 </html>
